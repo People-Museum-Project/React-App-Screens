@@ -48,7 +48,7 @@ function Profile() {
 
     return (
         <div>
-            <h2>Create New Profile</h2>
+            <h2>Signup</h2>
             <form onSubmit={handleSubmit} style={formStyle}>
                 <div style={inputContainerStyle}>
                     <label style={labelStyle}>First Name:</label>
