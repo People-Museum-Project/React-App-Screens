@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Container, Box, Typography } from '@mui/material';
 import QuestionForm from './QuestionForm';
 import QuestionList from './QuestionList';
 import Answer from './Answer';
@@ -15,7 +16,7 @@ function App() {
 
   const handleAskQuestion = (question) => {
     setSelectedQuestion(question);
-    generateAnswer(question); 
+    generateAnswer(question);
   };
 
   const generateAnswer = (question) => {
@@ -29,15 +30,17 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      <header className="app-header">
-        <img src="https://cdn.theatlantic.com/media/mt/tanehisicoates/Smalls.jpg" alt="Robert Smalls" className="profile-image" />
-        <h2>Ask Robert Smalls a Question</h2>
-      </header>
+    <Container maxWidth="md" sx={{ bgcolor: '#282c34', color: '#ffffff', borderRadius: 2, p: 3, mt: 5 }}>
+      <Box component="header" sx={{ textAlign: 'center', mb: 3 }}>
+        <img src="https://cdn.theatlantic.com/media/mt/tanehisicoates/Smalls.jpg" alt="Robert Smalls" style={{ maxWidth: 300, height: 'auto', borderRadius: 8 }} />
+        <Typography variant="h4" component="h2">
+          Ask Robert Smalls a Question
+        </Typography>
+      </Box>
       <QuestionList questions={questions} onSelectQuestion={handleAskQuestion} />
       <QuestionForm onAskQuestion={handleAskQuestion} />
       {selectedQuestion && <Answer answer={answer} />}
-    </div>
+    </Container>
   );
 }
 

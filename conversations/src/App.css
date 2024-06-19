@@ -34,7 +34,8 @@ body {
   margin-bottom: 20px;
 }
 
-.question-button {
+.question-button,
+.ask-button {
   background-color: #007bff;
   color: #ffffff;
   border: none;
@@ -44,7 +45,8 @@ body {
   font-size: 18px;
 }
 
-.question-button:hover {
+.question-button:hover,
+.ask-button:hover {
   background-color: #0056b3;
 }
 
@@ -58,32 +60,22 @@ body {
 .question-input {
   padding: 10px;
   border-radius: 5px;
-  border: 1px solid #cccccc;
+  border: 1px solid #ffffff;
+  /* White border */
   font-size: 16px;
   width: 70%;
 }
 
-.ask-button {
-  background-color: #007bff;
-  color: #ffffff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.ask-button:hover {
-  background-color: #0056b3;
-}
-
 .answer-container {
-  background-color: #333333;
+  background-color: #282c34;
   padding: 20px;
   border-radius: 10px;
+  border: 1px solid #ffffff;
+  margin-top: 20px;
 }
 
 .answer-text {
   font-size: 18px;
   line-height: 1.5;
+  color: #ffffff;
 }
