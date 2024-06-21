@@ -89,7 +89,7 @@ const FormComponent = () => {
                 }}
             >
                 <Typography variant="h4" gutterBottom color="white">
-                    Create Profile
+                    Add Person to Museum
                 </Typography>
                 <TextField
                     sx={{ marginBottom: 2, width: '300px' }}
