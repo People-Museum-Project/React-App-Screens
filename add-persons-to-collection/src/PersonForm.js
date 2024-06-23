@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme({
     palette: {
@@ -41,7 +42,7 @@ const theme = createTheme({
     },
 });
 
-const FormComponent = () => {
+const PersonForm = ({ addPerson }) => {
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -50,6 +51,7 @@ const FormComponent = () => {
         picURL: '',
     });
     const [imagePreview, setImagePreview] = useState(null);
+    const navigate = useNavigate();
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -71,7 +73,8 @@ const FormComponent = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
+        addPerson({ ...formData, pic: imagePreview });
+        navigate('/');
     };
 
     return (
@@ -86,10 +89,11 @@ const FormComponent = () => {
                     justifyContent: 'center',
                     minHeight: '100vh',
                     p: 2,
+                    backgroundColor: '#282c34',
                 }}
             >
-                <Typography variant="h4" gutterBottom color="white">
-                    Create Profile
+                <Typography variant="h5" gutterBottom color="white">
+                    Add Person
                 </Typography>
                 <TextField
                     sx={{ marginBottom: 2, width: '300px' }}
@@ -136,7 +140,7 @@ const FormComponent = () => {
                     <Button
                         variant="contained"
                         component="label"
-                        sx={{ marginTop: 1 }}
+                        sx={{ marginTop: 1, color: 'white' }}
                     >
                         Upload Image
                         <input
@@ -162,13 +166,13 @@ const FormComponent = () => {
                     type="submit"
                     variant="contained"
                     color="primary"
-                    sx={{ marginTop: 2, width: '300px' }}
+                    sx={{ marginTop: 2, width: '300px', color: 'white' }}
                 >
-                    Create
+                    Add
                 </Button>
             </Box>
         </ThemeProvider>
     );
 };
 
-export default FormComponent;
+export default PersonForm;
