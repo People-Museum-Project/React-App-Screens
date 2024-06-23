@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './App.css'
+import './PersonToCollection.css'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Container } from '@mui/material';
 import PersonForm from './PersonForm';

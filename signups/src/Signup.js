@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography } from '@mui/material';
-import './App.css';
+import './Signup.css';
 
 function Signup() {
     const [formData, setFormData] = useState({
@@ -58,7 +58,7 @@ function Signup() {
                             onChange={handleChange}
                             error={!!errors[key]}
                             helperText={errors[key]}
-                            className="customTextField" // Add a class for custom styling
+                            className="customTextField" 
                         />
                     </Box>
                 ))}

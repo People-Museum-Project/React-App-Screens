@@ -3,7 +3,7 @@ import { Container, Box, Typography } from '@mui/material';
 import QuestionForm from './QuestionForm';
 import QuestionList from './QuestionList';
 import Answer from './Answer';
-import './App.css';
+import './Conversation.css';
 
 function App() {
   const [questions] = useState([

@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './CollectionToMuseum.css';
 import { Container } from '@mui/material';
 import CollectionForm from './CollectionForm';
 

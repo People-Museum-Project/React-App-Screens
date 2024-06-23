@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextField } from '@mui/material';
-import './App.css'; 
+import './Conversation.css'; 
 
 function Answer({ answer }) {
     return (

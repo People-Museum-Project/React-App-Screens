@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './PersonToMuseum.css';
 import FormComponent from './FormComponent';
 
 function App() {
