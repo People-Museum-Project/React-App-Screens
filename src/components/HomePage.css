@@ -10,6 +10,14 @@
   margin-top: 20px;
 }
 
+.photo {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
 .photo-wall img {
   width: 150px; /* 照片的宽度 */
   height: 150px; /* 照片的高度 */
@@ -17,6 +25,23 @@
   border-radius: 10px; /* 圆角 */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 阴影效果 */
 }
+
+.photo-wall .add-photo {
+  position: relative;
+  cursor: pointer;
+}
+
+.photo-wall .add-photo::after {
+  content: '+';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 36px;
+  color: white;
+  font-weight: bold;
+}
+
 
 .buttons {
   margin-top: 20px;
@@ -27,4 +52,6 @@
   padding: 10px 20px;
   font-size: 16px;
 }
+
+
 
