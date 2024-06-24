@@ -1,10 +1,10 @@
 import React from 'react';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
-import HomePage from './components/HomePage';
-import AddPersona from './components/AddPersona';
-import AddCollection from './components/AddCollection';
-import PersonDetail from './components/PersonDetail';
-import CollectionPage from './components/CollectionPage';
+import HomePage from './components/HomePage/HomePage';
+import AddPersona from './components/AddPersona/AddPersona';
+import AddCollection from './components/AddCollection/AddCollection';
+import PersonDetail from './components/PersonDetail/PersonDetail';
+import CollectionPage from './components/CollectionPage/CollectionPage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Create a theme instance
