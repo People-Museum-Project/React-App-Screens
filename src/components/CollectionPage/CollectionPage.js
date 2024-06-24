@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 const CollectionPage = () => {
   const { id } = useParams();
@@ -56,6 +56,9 @@ const CollectionPage = () => {
           </div>
         ))}
       </div>
+      <Link to="/add-persona">
+        <button type="button">Add Persona To Collection</button>
+      </Link>
     </div>
   );
 }

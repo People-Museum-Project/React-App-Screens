@@ -47,7 +47,7 @@ const HomePage = () => {
       <div className="photo-wall">
         {people.map(person => (
           <div key={person.id} className="person-container">
-            <Link to={`/person/${person.id}`}>
+            <Link to="/conversation">
               <img src={person.photo} alt={person.name} className="photo" />
             </Link>
             <p className="photo-name">{person.name}</p>

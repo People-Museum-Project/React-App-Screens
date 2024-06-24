@@ -3,8 +3,8 @@ import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import HomePage from './components/HomePage/HomePage';
 import AddPersona from './components/AddPersona/AddPersona';
 import AddCollection from './components/AddCollection/AddCollection';
-import PersonDetail from './components/PersonDetail/PersonDetail';
 import CollectionPage from './components/CollectionPage/CollectionPage';
+import Conversation from './components/Conversation/Conversation';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Create a theme instance
@@ -35,8 +35,8 @@ const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/add-persona" element={<AddPersona />} />
           <Route path="/add-collection" element={<AddCollection />} />
-          <Route path="/person/:id" element={<PersonDetail />} />
           <Route path="/collection/:id" element={<CollectionPage />} />
+          <Route path="/conversation" element={<Conversation />} />
         </Routes>
       </Router>
     </ThemeProvider>
