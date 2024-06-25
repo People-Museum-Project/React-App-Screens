@@ -56,7 +56,7 @@ const CollectionPage = () => {
           </div>
         ))}
       </div>
-      <Link to="/add-persona">
+      <Link to="/add-person-collection">
         <button type="button">Add Persona To Collection</button>
       </Link>
     </div>
