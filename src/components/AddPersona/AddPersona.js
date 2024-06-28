@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import axios from 'axios'; 
 import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
 
 const theme = createTheme({
   palette: {
@@ -42,7 +42,6 @@ const theme = createTheme({
   },
 });
 
-
 const AddPersona = () => {
   const [formData, setFormData] = useState({
     firstName: '',
@@ -52,7 +51,6 @@ const AddPersona = () => {
     picURL: '',
   });
   const [imagePreview, setImagePreview] = useState(null);
-
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -66,17 +64,52 @@ const AddPersona = () => {
     }
   };
 
-
   const handleURLChange = (e) => {
     const { value } = e.target;
     setFormData({ ...formData, picURL: value, pic: null });
     setImagePreview(value);
   };
 
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+
+    const formDataToSend = {
+      name: `${formData.firstName} ${formData.lastName}`,
+      imageLink: formData.picURL,
+      description: formData.description,
+      context: "Example context",
+      public: true
+    };
+
+    try {
+      const response = await fetch('http://127.0.0.1:8080/addPerson', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',  
+        },
+        body: JSON.stringify(formDataToSend),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const responseData = await response.json();
+      console.log('Person added successfully:', responseData);
+
+      setFormData({
+        firstName: '',
+        lastName: '',
+        description: '',
+        pic: null,
+        picURL: '',
+      });
+      setImagePreview(null);
+
+    } catch (error) {
+      console.error('Error adding person:', error);
+    }
   };
 
 
@@ -176,6 +209,5 @@ const AddPersona = () => {
     </ThemeProvider>
   );
 };
-
 
 export default AddPersona;
