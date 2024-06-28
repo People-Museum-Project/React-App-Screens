@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, Typography } from '@mui/material';
+import { Box, TextField, Button, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
 
 const theme = createTheme({
   palette: {
@@ -42,19 +41,51 @@ const theme = createTheme({
   },
 });
 
-
 const CollectionForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
+    userId: '1', // Example user ID
     collectionName: '',
     description: '',
+    imageLink: '',
+    isPublic: true,
   });
 
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    if (name === 'imageLink') {
+      setImagePreview(value);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({ ...formData, imageLink: reader.result });
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit(formData, () => {
+      setFormData({
+        userId: '1', // Example user ID
+        collectionName: '',
+        description: '',
+        imageLink: '',
+        isPublic: true,
+      });
+      setImagePreview(null);
+    });
   };
-
 
   return (
     <Box
@@ -78,7 +109,7 @@ const CollectionForm = ({ onSubmit }) => {
         variant="outlined"
         name="collectionName"
         value={formData.collectionName}
-        onChange={(e) => setFormData({ ...formData, collectionName: e.target.value })}
+        onChange={handleChange}
         required
         InputLabelProps={{ style: { color: 'white' } }}
       />
@@ -88,12 +119,47 @@ const CollectionForm = ({ onSubmit }) => {
         variant="outlined"
         name="description"
         value={formData.description}
-        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+        onChange={handleChange}
         multiline
         rows={4}
         required
         InputLabelProps={{ style: { color: 'white' } }}
       />
+      <Box sx={{ width: '300px', marginBottom: 2 }}>
+        <TextField
+          fullWidth
+          label="Image URL"
+          variant="outlined"
+          name="imageLink"
+          value={formData.imageLink}
+          onChange={handleChange}
+          InputLabelProps={{ style: { color: 'white' } }}
+        />
+        <Button
+          variant="contained"
+          component="label"
+          sx={{ marginTop: 1 }}
+        >
+          Upload Image
+          <input
+            type="file"
+            name="imageLink"
+            hidden
+            onChange={handleFileChange}
+          />
+        </Button>
+      </Box>
+      {imagePreview && (
+        <Card sx={{ maxWidth: 300, marginBottom: 2 }}>
+          <CardMedia
+            component="img"
+            height="auto"
+            image={imagePreview}
+            alt="Uploaded Image Preview"
+            sx={{ objectFit: 'contain' }}
+          />
+        </Card>
+      )}
       <Button
         type="submit"
         variant="contained"
@@ -106,12 +172,36 @@ const CollectionForm = ({ onSubmit }) => {
   );
 };
 
-
 const AddCollection = () => {
-  const handleCollectionSubmit = (formData) => {
-    console.log(formData);
-  };
+  const handleCollectionSubmit = async (formData, resetForm) => {
+    try {
+      const response = await fetch('http://127.0.0.1:8080/addCollection', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*', 
+        },
+        body: JSON.stringify({
+          userId: formData.userId,
+          name: formData.collectionName,
+          imageLink: formData.imageLink,
+          description: formData.description,
+          isPublic: formData.isPublic,
+        }),
+      });
 
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const responseData = await response.json();
+      console.log('Collection added successfully:', responseData);
+
+      resetForm();
+    } catch (error) {
+      console.error('Error adding collection:', error);
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -128,6 +218,5 @@ const AddCollection = () => {
     </ThemeProvider>
   );
 };
-
 
 export default AddCollection;
