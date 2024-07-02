@@ -1,0 +1,39 @@
+# 忽略 node_modules 文件夹
+node_modules/
+
+# 忽略构建文件夹
+build/
+dist/
+
+# 忽略环境变量文件
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 忽略日志文件
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 忽略操作系统生成的文件
+.DS_Store
+Thumbs.db
+
+# 忽略编辑器生成的文件
+.vscode/
+.idea/
+*.swp
+
+# 忽略 coverage 文件夹 (由测试工具生成)
+coverage/
+
+# 忽略 parcel-bundler cache 文件夹
+.cache/
+
+# 忽略下列文件（由 jetbrains IDEs 生成）
+*.iml
+.idea/
+*.iws
+
