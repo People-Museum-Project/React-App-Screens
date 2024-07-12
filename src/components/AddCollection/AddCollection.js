@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+
 const theme = createTheme({
   palette: {
     background: {
@@ -41,6 +42,7 @@ const theme = createTheme({
   },
 });
 
+
 const CollectionForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
     userId: '1', // Example user ID
@@ -50,16 +52,20 @@ const CollectionForm = ({ onSubmit }) => {
     isPublic: true,
   });
 
+
   const [imagePreview, setImagePreview] = useState(null);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
 
+
     if (name === 'imageLink') {
       setImagePreview(value);
     }
   };
+
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -72,6 +78,7 @@ const CollectionForm = ({ onSubmit }) => {
       reader.readAsDataURL(file);
     }
   };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -86,6 +93,7 @@ const CollectionForm = ({ onSubmit }) => {
       setImagePreview(null);
     });
   };
+
 
   return (
     <Box
@@ -172,14 +180,14 @@ const CollectionForm = ({ onSubmit }) => {
   );
 };
 
+
 const AddCollection = () => {
   const handleCollectionSubmit = async (formData, resetForm) => {
     try {
-      const response = await fetch('http://127.0.0.1:8080/addCollection', {
+      const response = await fetch('http://127.0.0.1:8080/db/addCollection', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*', 
         },
         body: JSON.stringify({
           userId: formData.userId,
@@ -190,18 +198,22 @@ const AddCollection = () => {
         }),
       });
 
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
 
+
       const responseData = await response.json();
       console.log('Collection added successfully:', responseData);
+
 
       resetForm();
     } catch (error) {
       console.error('Error adding collection:', error);
     }
   };
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -218,5 +230,6 @@ const AddCollection = () => {
     </ThemeProvider>
   );
 };
+
 
 export default AddCollection;

@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import HomePage from './components/HomePage/HomePage';
 import AddPersona from './components/AddPersona/AddPersona';
+import PersonList from './components/AddPersona/PersonList';
 import AddCollection from './components/AddCollection/AddCollection';
+import CollectionList from './components/AddCollection/CollectionList';
 import AddPersonToCollection from './components/AddPersonToCollection/AddPersonToCollection';
 import PersonFormScreen from './components/AddPersonToCollection/PersonFormScreen';
 import CollectionPage from './components/CollectionPage/CollectionPage';
 import Conversation from './components/Conversation/Conversation';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 
 // Create a theme instance
 const theme = createTheme({
@@ -28,13 +31,16 @@ const theme = createTheme({
   }
 });
 
+
 const App = () => {
   const [people, setPeople] = useState([]);
+
 
   const addPerson = (person) => {
     setPeople([...people, person]);
   };
-  
+
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -44,8 +50,10 @@ const App = () => {
           <Route path="/add-persona" element={<AddPersona />} />
           <Route path="/add-collection" element={<AddCollection />} />
 
+
           <Route path="/person-collection" element={<PersonFormScreen people={people} />} />
           <Route path="/add-person-collection" element={<AddPersonToCollection addPerson={addPerson} />} />
+
 
           <Route path="/collection/:id" element={<CollectionPage />} />
           <Route path="/conversation" element={<Conversation />} />
@@ -54,5 +62,6 @@ const App = () => {
     </ThemeProvider>
   );
 }
+
 
 export default App;

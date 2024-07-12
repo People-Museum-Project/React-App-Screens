@@ -3,6 +3,7 @@ import axios from 'axios';
 import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+
 const theme = createTheme({
   palette: {
     background: {
@@ -42,15 +43,19 @@ const theme = createTheme({
   },
 });
 
-const AddPersona = () => {
+
+const AddPersona = ({ onAddPerson }) => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     description: '',
     pic: null,
     picURL: '',
+    userId: 1,
+    collectionId: 'collection1',
   });
   const [imagePreview, setImagePreview] = useState(null);
+
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -64,39 +69,47 @@ const AddPersona = () => {
     }
   };
 
+
   const handleURLChange = (e) => {
     const { value } = e.target;
     setFormData({ ...formData, picURL: value, pic: null });
     setImagePreview(value);
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
 
     const formDataToSend = {
       name: `${formData.firstName} ${formData.lastName}`,
       imageLink: formData.picURL,
       description: formData.description,
       context: "Example context",
-      public: true
+      userId: formData.userId,
+      collectionId: formData.collectionId,
+      public: true,
     };
 
+
     try {
-      const response = await fetch('http://127.0.0.1:8080/addPerson', {
+      const response = await fetch('http://127.0.0.1:8080/db/addPerson', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
         },
         body: JSON.stringify(formDataToSend),
       });
+
 
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
 
+
       const responseData = await response.json();
       console.log('Person added successfully:', responseData);
+
 
       setFormData({
         firstName: '',
@@ -104,8 +117,11 @@ const AddPersona = () => {
         description: '',
         pic: null,
         picURL: '',
+        userId: 1,
+        collectionId: 'collection1',
       });
       setImagePreview(null);
+
 
     } catch (error) {
       console.error('Error adding person:', error);
@@ -209,5 +225,6 @@ const AddPersona = () => {
     </ThemeProvider>
   );
 };
+
 
 export default AddPersona;
