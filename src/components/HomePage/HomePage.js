@@ -74,6 +74,18 @@ const HomePage = () => {
           <Button variant="contained" style={{ backgroundColor: '#fff', color: '#000' }}>Add Collection</Button>
         </Link>
       </div>
+
+      <div className="buttons" style={{ marginTop: '20px' }}>
+        <Link to="/person-list">
+          <Button variant="contained" style={{ backgroundColor: '#fff', color: '#000' }}>View People</Button>
+        </Link>
+      </div>
+
+      <div className="buttons" style={{ marginTop: '20px' }}>
+        <Link to="/collection-list">
+          <Button variant="contained" style={{ backgroundColor: '#fff', color: '#000' }}>View Collections</Button>
+        </Link>
+      </div>
     </div>
   );
 }

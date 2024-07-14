@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -93,7 +92,7 @@ const AddPersona = ({ onAddPerson }) => {
 
 
     try {
-      const response = await fetch('http://127.0.0.1:8080/db/addPerson', {
+      const response = await fetch('https://peoplemuseumyeah.uc.r.appspot.com/db/addPerson', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

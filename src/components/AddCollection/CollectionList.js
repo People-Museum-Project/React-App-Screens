@@ -1,53 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
-
-
-// Function to get a list of collections
-const getCollectionList = async (userId, page = 1, limit = 10, sortBy = 'name', order = 'asc') => {
-    const BASE_URL = 'http://127.0.0.1:8080/db';
-
-
-    try {
-        const response = await axios.post(`${BASE_URL}/getCollectionList`, {
-            userId,
-            page,
-            limit,
-            sortBy,
-            order,
-        }, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        console.log('Status:', response.status);
-        console.log('Data:', response.data);
-        return response;
-    } catch (error) {
-        console.error('Error:', error.message);
-        if (error.response) {
-            console.error('Status:', error.response.status);
-            console.error('Data:', error.response.data);
-        } else if (error.request) {
-            console.error('No response received:', error.request);
-        } else {
-            console.error('Error setting up request:', error.message);
-        }
-    }
-};
-
+import { Grid, Box, Typography, Card, CardContent, CardActions, Button, CardMedia } from '@mui/material';
 
 const CollectionList = () => {
-    const userId = '1'; // Hardcoded userId as a string
+    const userId = '1'; 
     const [collections, setCollections] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
 
     useEffect(() => {
         const fetchCollections = async () => {
             try {
                 const response = await getCollectionList(userId);
-
 
                 if (response && response.data && response.data.data) {
                     setCollections(response.data.data);
@@ -62,36 +27,163 @@ const CollectionList = () => {
             }
         };
 
-
         fetchCollections();
-    }, []);
+    }, [userId]);
 
+    const getCollectionList = async (userId = '1', page = 1, limit = 10, sortBy = 'name', order = 'asc') => {
+        const BASE_URL = 'https://peoplemuseumyeah.uc.r.appspot.com/db';
+
+        try {
+            const response = await axios.post(
+                `${BASE_URL}/getCollectionList`,
+                { userId, page, limit, sortBy, order },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+            console.log('Status:', response.status);
+            console.log('Data:', response.data);
+            return response;
+        } catch (error) {
+            console.error('Error:', error.message);
+            if (error.response) {
+                console.error('Status:', error.response.status);
+                console.error('Data:', error.response.data);
+            } else if (error.request) {
+                console.error('No response received:', error.request);
+            } else {
+                console.error('Error setting up request:', error.message);
+            }
+            throw error;
+        }
+    };
+
+    const handleDelete = async (collectionId) => {
+        try {
+            await deleteCollection(collectionId);
+            setCollections(collections.filter((collection) => collection.collectionId !== collectionId));
+        } catch (error) {
+            console.error('Error deleting collection:', error);
+        }
+    };
+
+    const deleteCollection = async (collectionId) => {
+        const BASE_URL = 'https://peoplemuseumyeah.uc.r.appspot.com/db';
+
+        try {
+            const response = await axios.delete(`${BASE_URL}/deleteCollection`, {
+                data: { collectionId },
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            console.log('Status:', response.status);
+            console.log('Data:', response.data);
+            return response;
+        } catch (error) {
+            console.error('Error:', error.message);
+            if (error.response) {
+                console.error('Status:', error.response.status);
+                console.error('Data:', error.response.data);
+            } else if (error.request) {
+                console.error('No response received:', error.request);
+            } else {
+                console.error('Error setting up request:', error.message);
+            }
+            throw error;
+        }
+    };
 
     if (loading) {
-        return <div>Loading...</div>;
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                Loading...
+            </Box>
+        );
     }
-
 
     if (error) {
-        return <div>Error: {error}</div>;
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                Error: {error}
+            </Box>
+        );
     }
 
-
     return (
-        <div>
-            {collections.length > 0 ? (
-                collections.map((collection, index) => (
-                    <div key={index} className="collection">
-                        <h3>{collection.name}</h3>
-                        <p>{collection.description}</p>
-                    </div>
-                ))
-            ) : (
-                <div>No collections found</div>
-            )}
-        </div>
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '100vh',
+                p: 2,
+            }}
+        >
+            <Typography variant="h4" gutterBottom color="primary" sx={{ textAlign: 'center' }}>
+                Collection List
+            </Typography>
+            <Button
+                component={Link}
+                to="/add-collection"
+                variant="contained"
+                color="primary"
+                sx={{ marginBottom: 2 }}
+            >
+                Add Collection
+            </Button>
+            <Grid container spacing={2} justifyContent="center">
+                {collections.length > 0 ? (
+                    collections.map((collection) => (
+                        <Grid item key={collection.collectionId}>
+                            <Card sx={{ maxWidth: 300, marginBottom: 2 }}>
+                                <CardMedia
+                                    component="img"
+                                    height="200"
+                                    image={collection.imageLink} 
+                                    alt={collection.name}
+                                    sx={{ objectFit: 'contain' }}
+                                />
+                                <CardContent>
+                                    <Typography variant="h6" gutterBottom color="text.primary">
+                                        {collection.name}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        Description: {collection.description}
+                                    </Typography>
+                                </CardContent>
+                                <CardActions>
+                                    <Button
+                                        component={Link}
+                                        to={`/update-collection/${'5645760532054016'}`}
+                                        variant="outlined"
+                                        color="primary"
+                                        sx={{ marginRight: 1 }}
+                                    >
+                                        Update
+                                    </Button>
+                                    <Button
+                                        variant="outlined"
+                                        color="secondary"
+                                        onClick={() => handleDelete(collection.collectionId)}
+                                    >
+                                        Delete
+                                    </Button>
+                                </CardActions>
+                            </Card>
+                        </Grid>
+                    ))
+                ) : (
+                    <Typography variant="h6" color="text.secondary" sx={{ textAlign: 'center' }}>
+                        No collections found
+                    </Typography>
+                )}
+            </Grid>
+        </Box>
     );
 };
-
 
 export default CollectionList;

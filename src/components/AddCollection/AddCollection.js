@@ -184,7 +184,7 @@ const CollectionForm = ({ onSubmit }) => {
 const AddCollection = () => {
   const handleCollectionSubmit = async (formData, resetForm) => {
     try {
-      const response = await fetch('http://127.0.0.1:8080/db/addCollection', {
+      const response = await fetch('https://peoplemuseumyeah.uc.r.appspot.com/db/addCollection', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
