@@ -92,7 +92,10 @@ const UpdateCollection = () => {
                         description: fetchedCollection.description,
                     });
                     setImagePreview(fetchedCollection.imageLink);
-                    setFormData({ ...formData, picURL: fetchedCollection.imageLink });
+                    setFormData((prevFormData) => ({
+                        ...prevFormData,
+                        picURL: fetchedCollection.imageLink,
+                    }));
                 } else {
                     console.log('Collection not found');
                 }
@@ -102,11 +105,15 @@ const UpdateCollection = () => {
         };
 
         fetchCollection();
-    }, [collectionId, formData]); 
+    }, [collectionId]);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        setFormData({ ...formData, pic: file, picURL: '' });
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            pic: file,
+            picURL: '',
+        }));
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -118,7 +125,11 @@ const UpdateCollection = () => {
 
     const handleURLChange = (e) => {
         const { value } = e.target;
-        setFormData({ ...formData, picURL: value, pic: null });
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            picURL: value,
+            pic: null,
+        }));
         setImagePreview(value);
     };
 
@@ -156,7 +167,7 @@ const UpdateCollection = () => {
 
             if (response.status === 200) {
                 console.log('Update successful:', response.data);
-                window.location.href = '/collection-list'; 
+                window.location.href = '/collection-list';
             } else {
                 console.error('Update failed:', response.data.message);
             }
@@ -167,10 +178,10 @@ const UpdateCollection = () => {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setCollection({
-            ...collection,
+        setCollection((prevCollection) => ({
+            ...prevCollection,
             [name]: value,
-        });
+        }));
     };
 
     return (
@@ -200,6 +211,18 @@ const UpdateCollection = () => {
                     required
                     InputLabelProps={{ style: { color: 'white' } }}
                 />
+                <TextField
+                    sx={{ marginBottom: 2, width: '300px' }}
+                    label="Description"
+                    variant="outlined"
+                    name="description"
+                    value={collection.description}
+                    onChange={handleChange}
+                    multiline
+                    rows={4}
+                    required
+                    InputLabelProps={{ style: { color: 'white' } }}
+                />
                 <Box sx={{ marginBottom: 2, width: '300px' }}>
                     <TextField
                         fullWidth
@@ -226,18 +249,6 @@ const UpdateCollection = () => {
                         />
                     </Card>
                 )}
-                <TextField
-                    sx={{ marginBottom: 2, width: '300px' }}
-                    label="Description"
-                    variant="outlined"
-                    name="description"
-                    value={collection.description}
-                    onChange={handleChange}
-                    multiline
-                    rows={4}
-                    required
-                    InputLabelProps={{ style: { color: 'white' } }}
-                />
                 <Button
                     type="submit"
                     variant="contained"

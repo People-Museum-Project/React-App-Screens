@@ -103,6 +103,15 @@ const PersonList = () => {
             <Typography variant="h4" gutterBottom color="primary" sx={{ textAlign: 'center' }}>
                 People In My Museum
             </Typography>
+            <Button
+                component={Link}
+                to="/add-persona"
+                variant="contained"
+                color="primary"
+                sx={{ marginBottom: 2 }}
+            >
+                Add Person
+            </Button>
             <Grid container spacing={2} justifyContent="center">
                 {people.length > 0 ? (
                     people.map((person, index) => (
@@ -125,7 +134,7 @@ const PersonList = () => {
                                     <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
                                         <Button
                                             component={Link}
-                                            to={`/update-person/${'5088723339313152'}`}
+                                            to={`/update-person/${'5710150413320192'}`}
                                             variant="outlined"
                                             color="primary"
                                             sx={{ marginRight: 1 }}
@@ -141,7 +150,7 @@ const PersonList = () => {
                                         </Button>
                                         <Button
                                             component={Link}
-                                            to={`/conversation/${'5088723339313152'}`}
+                                            to={`/conversation/${'5710150413320192'}`}
                                             variant="contained"
                                             color="primary"
                                             sx={{ marginLeft: 1 }}
@@ -159,15 +168,6 @@ const PersonList = () => {
                     </Typography>
                 )}
             </Grid>
-            <Button
-                component={Link}
-                to="/add-persona"
-                variant="contained"
-                color="primary"
-                sx={{ marginBottom: 2 }}
-            >
-                Add Person
-            </Button>
         </Box>
     );
 };

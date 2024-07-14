@@ -206,9 +206,7 @@ const AddCollection = () => {
 
       const responseData = await response.json();
       console.log('Collection added successfully:', responseData);
-
-
-      resetForm();
+      window.location.href = '/collection-list';
     } catch (error) {
       console.error('Error adding collection:', error);
     }

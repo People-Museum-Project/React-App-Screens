@@ -48,13 +48,13 @@ const uploadImage = async (file) => {
   formData.append('file', file);
 
   try {
-    const response = await axios.post('https://peoplemuseumyeah.uc.r.appspot.com/db', formData, {
+    const response = await axios.post('https://peoplemuseumyeah.uc.r.appspot.com/db/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
 
-    return response.data.imageUrl; 
+    return response.data.imageUrl;
   } catch (error) {
     console.error('Error uploading image:', error);
     throw error;
@@ -169,7 +169,7 @@ const UpdatePerson = () => {
 
       if (response.status === 200) {
         console.log('Update successful:', response.data);
-        window.location.href = '/person-list'; 
+        window.location.href = '/person-list';
       } else {
         console.error('Update failed:', response.data.message);
       }
@@ -213,6 +213,18 @@ const UpdatePerson = () => {
           required
           InputLabelProps={{ style: { color: 'white' } }}
         />
+        <TextField
+          sx={{ marginBottom: 2, width: '300px' }}
+          label="Description"
+          variant="outlined"
+          name="description"
+          value={person.description}
+          onChange={handleChange}
+          multiline
+          rows={4}
+          required
+          InputLabelProps={{ style: { color: 'white' } }}
+        />
         <Box sx={{ marginBottom: 2, width: '300px' }}>
           <TextField
             fullWidth
@@ -239,18 +251,6 @@ const UpdatePerson = () => {
             />
           </Card>
         )}
-        <TextField
-          sx={{ marginBottom: 2, width: '300px' }}
-          label="Description"
-          variant="outlined"
-          name="description"
-          value={person.description}
-          onChange={handleChange}
-          multiline
-          rows={4}
-          required
-          InputLabelProps={{ style: { color: 'white' } }}
-        />
         <Button
           type="submit"
           variant="contained"

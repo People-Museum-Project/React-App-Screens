@@ -101,27 +101,9 @@ const AddPersona = ({ onAddPerson }) => {
       });
 
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-
       const responseData = await response.json();
       console.log('Person added successfully:', responseData);
-
-
-      setFormData({
-        firstName: '',
-        lastName: '',
-        description: '',
-        pic: null,
-        picURL: '',
-        userId: 1,
-        collectionId: 'collection1',
-      });
-      setImagePreview(null);
-
-
+      window.location.href = '/person-list';
     } catch (error) {
       console.error('Error adding person:', error);
     }

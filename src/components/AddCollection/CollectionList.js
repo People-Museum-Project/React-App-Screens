@@ -4,11 +4,12 @@ import axios from 'axios';
 import { Grid, Box, Typography, Card, CardContent, CardActions, Button, CardMedia } from '@mui/material';
 
 const CollectionList = () => {
-    const userId = '1'; 
+    const userId = '1';
     const [collections, setCollections] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // Fetch collections when the component mounts
     useEffect(() => {
         const fetchCollections = async () => {
             try {
@@ -30,6 +31,7 @@ const CollectionList = () => {
         fetchCollections();
     }, [userId]);
 
+    // Function to fetch collection list from the backend
     const getCollectionList = async (userId = '1', page = 1, limit = 10, sortBy = 'name', order = 'asc') => {
         const BASE_URL = 'https://peoplemuseumyeah.uc.r.appspot.com/db';
 
@@ -60,6 +62,7 @@ const CollectionList = () => {
         }
     };
 
+    // Function to handle the deletion of a collection
     const handleDelete = async (collectionId) => {
         try {
             await deleteCollection(collectionId);
@@ -69,6 +72,7 @@ const CollectionList = () => {
         }
     };
 
+    // Function to delete a collection from the backend
     const deleteCollection = async (collectionId) => {
         const BASE_URL = 'https://peoplemuseumyeah.uc.r.appspot.com/db';
 
@@ -124,7 +128,7 @@ const CollectionList = () => {
             }}
         >
             <Typography variant="h4" gutterBottom color="primary" sx={{ textAlign: 'center' }}>
-                Collection List
+                Collection's In My Museum
             </Typography>
             <Button
                 component={Link}
@@ -137,13 +141,13 @@ const CollectionList = () => {
             </Button>
             <Grid container spacing={2} justifyContent="center">
                 {collections.length > 0 ? (
-                    collections.map((collection) => (
-                        <Grid item key={collection.collectionId}>
+                    collections.map((collection, index) => (
+                        <Grid item key={index}>
                             <Card sx={{ maxWidth: 300, marginBottom: 2 }}>
                                 <CardMedia
                                     component="img"
                                     height="200"
-                                    image={collection.imageLink} 
+                                    image={collection.imageLink}
                                     alt={collection.name}
                                     sx={{ objectFit: 'contain' }}
                                 />
@@ -158,7 +162,7 @@ const CollectionList = () => {
                                 <CardActions>
                                     <Button
                                         component={Link}
-                                        to={`/update-collection/${'5645760532054016'}`}
+                                        to={`/update-collection/${"5675594515742720"}`} 
                                         variant="outlined"
                                         color="primary"
                                         sx={{ marginRight: 1 }}
@@ -171,6 +175,15 @@ const CollectionList = () => {
                                         onClick={() => handleDelete(collection.collectionId)}
                                     >
                                         Delete
+                                    </Button>
+                                    <Button
+                                        component={Link}
+                                        to={`/`}
+                                        variant="contained"
+                                        color="primary"
+                                        sx={{ marginLeft: 1 }}
+                                    >
+                                        View
                                     </Button>
                                 </CardActions>
                             </Card>
