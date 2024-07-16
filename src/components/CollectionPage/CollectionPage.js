@@ -6,8 +6,9 @@ import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography, Paper
 
 const CollectionPage = () => {
   const { id } = useParams();
-  const collections = useCollections();
-  const collection = collections.find(collection => collection.id === parseInt(id, 10));
+  const { collections } = useCollections();
+  const collectionId = parseInt(id, 10);
+  const collection = Array.isArray(collections) ? collections.find(collection => collection.id === collectionId) : null; // Ensure collections is an array
   const [persons, setPersons] = useState([]);
 
   useEffect(() => {
@@ -43,7 +44,7 @@ const CollectionPage = () => {
         <Typography variant="h6" gutterBottom>Persons in this Collection:</Typography>
         <List>
           {persons.map(person => (
-            <ListItem key={person.userId}>
+            <ListItem key={person.id}>
               <ListItemAvatar>
                 <Avatar src={person.imageLink} alt={person.name} />
               </ListItemAvatar>
