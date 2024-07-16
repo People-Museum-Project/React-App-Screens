@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // 导入 useNavigate
-import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { getPerson, updatePerson, uploadImage, deletePerson } from '../../utils'; // Import deletePerson function
 
 const theme = createTheme({
   palette: {
@@ -43,27 +43,9 @@ const theme = createTheme({
   },
 });
 
-const uploadImage = async (file) => {
-  const formData = new FormData();
-  formData.append('file', file);
-
-  try {
-    const response = await axios.post('https://peoplemuseumyeah.uc.r.appspot.com/db/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-
-    return response.data.imageUrl;
-  } catch (error) {
-    console.error('Error uploading image:', error);
-    throw error;
-  }
-};
-
 const UpdatePerson = () => {
   const { personId } = useParams();
-  const navigate = useNavigate(); // 使用 useNavigate
+  const navigate = useNavigate();
   const [person, setPerson] = useState({
     name: '',
     description: '',
@@ -73,21 +55,16 @@ const UpdatePerson = () => {
     picURL: '',
   });
   const [imagePreview, setImagePreview] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchPerson = async () => {
+    const fetchPersonData = async () => {
+      setLoading(true);
       try {
-        const response = await axios.post(
-          'https://peoplemuseumyeah.uc.r.appspot.com/db/getPerson',
-          { personId },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        if (response.data && response.data.person) {
-          const fetchedPerson = response.data.person;
+        const response = await getPerson(personId);
+        if (response && response.person) {
+          const fetchedPerson = response.person;
           setPerson({
             name: fetchedPerson.name,
             description: fetchedPerson.description,
@@ -98,14 +75,16 @@ const UpdatePerson = () => {
             picURL: fetchedPerson.imageLink,
           }));
         } else {
-          console.log('Person not found');
+          setError('Person not found');
         }
       } catch (error) {
-        console.error('Error fetching person:', error);
+        setError('Error fetching person');
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchPerson();
+    fetchPersonData();
   }, [personId]);
 
   const handleFileChange = (e) => {
@@ -136,6 +115,8 @@ const UpdatePerson = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
 
     let imageUrl = formData.picURL;
 
@@ -143,39 +124,31 @@ const UpdatePerson = () => {
       try {
         imageUrl = await uploadImage(formData.pic);
       } catch (error) {
-        console.error('Error uploading image:', error);
+        setError('Error uploading image');
+        setLoading(false);
         return;
       }
     }
 
-    const formDataToSend = {
-      personId,
-      newName: person.name,
-      newImageLink: imageUrl,
-      newDescription: person.description,
-      newContext: '',
-      newPublic: true,
-    };
-
     try {
-      const response = await axios.put(
-        'https://peoplemuseumyeah.uc.r.appspot.com/db/updatePerson',
-        formDataToSend,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
+      const response = await updatePerson(
+        personId,
+        person.name,
+        imageUrl,
+        person.description,
+        '',
+        true
       );
 
-      if (response.status === 200) {
-        console.log('Update successful:', response.data);
-        navigate('/'); // 更新成功后导航回主页
+      if (response) {
+        navigate(`/conversation/${personId}`); 
       } else {
-        console.error('Update failed:', response.data.message);
+        setError('Update failed');
       }
     } catch (error) {
-      console.error('Error updating person:', error);
+      setError('Error updating person');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -185,6 +158,24 @@ const UpdatePerson = () => {
       ...prevPerson,
       [name]: value,
     }));
+  };
+
+  const handleDelete = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await deletePerson(personId);
+      if (response && response.message === 'Person deleted successfully') {
+        navigate('/'); 
+      } else {
+        setError('Delete failed');
+      }
+    } catch (error) {
+      setError('Error deleting person');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -204,6 +195,11 @@ const UpdatePerson = () => {
         <Typography variant="h4" gutterBottom color="white">
           Update Person
         </Typography>
+        {error && (
+          <Typography variant="body1" color="error" gutterBottom>
+            {error}
+          </Typography>
+        )}
         <TextField
           sx={{ marginBottom: 2, width: '300px' }}
           label="Name"
@@ -257,8 +253,18 @@ const UpdatePerson = () => {
           variant="contained"
           color="primary"
           sx={{ marginTop: 2, width: '300px' }}
+          disabled={loading}
         >
-          Update
+          {loading ? 'Updating...' : 'Update'}
+        </Button>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={handleDelete}
+          sx={{ marginTop: 2, width: '300px' }}
+          disabled={loading}
+        >
+          {loading ? 'Deleting...' : 'Delete'}
         </Button>
       </Box>
     </ThemeProvider>

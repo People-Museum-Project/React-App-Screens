@@ -63,6 +63,61 @@ const updateUser = async (userId, name, imageLink, description) => {
   }
 };
 
+const getPerson = async (personId) => {
+  try {
+    const response = await fetch(`${baseurl}getPerson`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ personId: personId })
+    });
+    const data = await response.json();
+    console.log('Status:', response.status);
+    console.log('Data:', data);
+    return data;
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+};
+
+
+const updatePerson = async (personId, newName, newImageLink, newDescription, newContext, newPublic) => {
+  try {
+    const response = await fetch(`${baseurl}updatePerson`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ personId, newName, newImageLink, newDescription, newContext, newPublic }),
+    });
+    const data = await response.json();
+    console.log('Status:', response.status);
+    console.log('Data:', data);
+    return data;
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+};
+
+const deletePerson = async (personId) => {
+  try {
+    const response = await fetch(`${baseurl}deletePerson`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ personId: personId })
+    });
+    const data = await response.json();
+    console.log('Status:', response.status);
+    console.log('Data:', data);
+    return data;
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+};
+
 const getPersonList = async (userId, page = 1, limit = 10, sortBy = 'name', order = 'asc') => {
   try {
     const response = await fetch(`${baseurl}getPersonList`, {
@@ -182,6 +237,9 @@ module.exports = {
   addUser,
   getUser,
   updateUser,
+  getPerson,
+  updatePerson,
+  deletePerson,
   getPersonList,
   getCollectionList,
   getPersonListByCollection,

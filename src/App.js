@@ -4,6 +4,7 @@ import React from 'react';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import HomePage from './components/HomePage/HomePage';
 import AddPersona from './components/AddPersona/AddPersona';
+import UpdatePerson from './components/AddPersona/UpdatePerson';
 import AddCollection from './components/AddCollection/AddCollection';
 import AddPersonToCollection from './components/AddPersonToCollection/AddPersonToCollection';
 import PersonFormScreen from './components/AddPersonToCollection/PersonFormScreen';
@@ -38,6 +39,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/add-persona" element={<AddPersona />} />
+            <Route path="/update-person/:personId" element={<UpdatePerson />} />
             <Route path="/add-collection" element={<AddCollection />} />
             <Route path="/person-collection" element={<PersonFormScreen />} />
             <Route path="/add-person-collection" element={<AddPersonToCollection />} />

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Container, Box, Typography } from '@mui/material';
+import { useParams, Link } from 'react-router-dom';
+import { Container, Box, Typography, IconButton } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import QuestionForm from './QuestionForm';
 import QuestionList from './QuestionList';
 import Answer from './Answer';
@@ -59,7 +60,7 @@ const Conversation = () => {
     <Container maxWidth="md">
       {person ? (
         <>
-          <Box component="header" sx={{ textAlign: 'center', mb: 3 }}>
+          <Box component="header" sx={{ textAlign: 'center', mb: 3, position: 'relative' }}>
             <img src={person.imageLink} alt={person.name} style={{ maxWidth: 300, height: 'auto', borderRadius: 8 }} />
             <Typography variant="h4" component="h2" sx={{ mt: 4, mb: 2 }}>
               Ask {person.name} a Question
@@ -67,6 +68,15 @@ const Conversation = () => {
             <Typography variant="body1" sx={{ mb: 4 }}>
               Description: {person.description}
             </Typography>
+            <IconButton
+              component={Link}
+              to={`/update-person/${personId}`}
+              variant="outlined"
+              color="primary"
+              sx={{ position: 'absolute', top: 16, right: 16 }}
+            >
+              <EditIcon />
+            </IconButton>
           </Box>
           <QuestionList questions={questions} onSelectQuestion={handleAskQuestion} />
           <QuestionForm onAskQuestion={handleAskQuestion} />
