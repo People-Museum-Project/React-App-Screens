@@ -42,7 +42,7 @@ const App = () => {
             <Route path="/person-collection" element={<PersonFormScreen />} />
             <Route path="/add-person-collection" element={<AddPersonToCollection />} />
             <Route path="/collection/:id" element={<CollectionPage />} />
-            <Route path="/conversation" element={<Conversation />} />
+            <Route path="/conversation/:personId" element={<Conversation />} />
           </Routes>
         </Router>
       </CollectionProvider>
