@@ -32,7 +32,7 @@ const CollectionList = () => {
     }, [userId]);
 
     // Function to fetch collection list from the backend
-    const getCollectionList = async (userId = '1', page = 1, limit = 10, sortBy = 'name', order = 'asc') => {
+    const getCollectionList = async (userId = 1, page = 1, limit = 10, sortBy = 'name', order = 'asc') => {
         const BASE_URL = 'https://peoplemuseumyeah.uc.r.appspot.com/db';
 
         try {
@@ -162,7 +162,7 @@ const CollectionList = () => {
                                 <CardActions>
                                     <Button
                                         component={Link}
-                                        to={`/update-collection/${"5675594515742720"}`} 
+                                        to={`/update-collection/5675594515742720`} 
                                         variant="outlined"
                                         color="primary"
                                         sx={{ marginRight: 1 }}

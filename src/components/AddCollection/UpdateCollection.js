@@ -48,7 +48,7 @@ const uploadImage = async (file) => {
     formData.append('file', file);
 
     try {
-        const response = await axios.post('https://peoplemuseumyeah.uc.r.appspot.com/db', formData, {
+        const response = await axios.post('https://peoplemuseumyeah.uc.r.appspot.com/db/upload', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -85,8 +85,8 @@ const UpdateCollection = () => {
                         },
                     }
                 );
-                if (response.data && response.data.collection) {
-                    const fetchedCollection = response.data.collection;
+                if (response.data && response.data.data) {
+                    const fetchedCollection = response.data.data;
                     setCollection({
                         name: fetchedCollection.name,
                         description: fetchedCollection.description,
@@ -152,6 +152,7 @@ const UpdateCollection = () => {
             newName: collection.name,
             newImageLink: imageUrl,
             newDescription: collection.description,
+            newIsPublic: false, // Assuming newIsPublic should always be false based on your example
         };
 
         try {
