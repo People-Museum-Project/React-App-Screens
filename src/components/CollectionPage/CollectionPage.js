@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useCollections } from '../../context/CollectionContext';
 import { getPersonListByCollection } from '../../utils';
-import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography, Paper, Button } from '@mui/material';
+import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography, Paper, Button, IconButton, Box } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 
 const CollectionPage = () => {
   const { id } = useParams();
@@ -32,7 +33,17 @@ const CollectionPage = () => {
 
   return (
     <div>
-      <h1>{collection.name}</h1>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <h1>{collection.name}</h1>
+        <IconButton
+          component={Link}
+          to={`/update-collection/${collectionId}`}
+          color="primary"
+          sx={{ marginLeft: 1 }}
+        >
+          <EditIcon />
+        </IconButton>
+      </Box>
       <p>{collection.description}</p>
       {collection.imageLink && <img src={collection.imageLink} alt={collection.name} style={{ maxWidth: '100%' }} />}
       <Link to={`/add-person-collection/${collectionId}`}>
@@ -48,10 +59,20 @@ const CollectionPage = () => {
               <ListItemAvatar>
                 <Avatar src={person.imageLink} alt={person.name} />
               </ListItemAvatar>
-              <ListItemText
-                primary={person.name}
-                secondary={person.description}
-              />
+              <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                <ListItemText
+                  primary={person.name}
+                  secondary={person.description}
+                />
+                <IconButton
+                  edge="end"
+                  aria-label="edit"
+                  component={Link}
+                  to={`/update-person/${person.id}`}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Box>
             </ListItem>
           ))}
         </List>

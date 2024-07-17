@@ -4,8 +4,8 @@ import HomePage from './components/HomePage/HomePage';
 import AddPersona from './components/AddPersona/AddPersona';
 import UpdatePerson from './components/AddPersona/UpdatePerson';
 import AddCollection from './components/AddCollection/AddCollection';
+import UpdateCollection from './components/AddCollection/UpdateCollection';
 import AddPersonToCollection from './components/AddPersonToCollection/AddPersonToCollection';
-import PersonFormScreen from './components/AddPersonToCollection/PersonFormScreen';
 import CollectionPage from './components/CollectionPage/CollectionPage';
 import Conversation from './components/Conversation/Conversation';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -38,8 +38,8 @@ const App = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/add-persona" element={<AddPersona />} />
             <Route path="/update-person/:personId" element={<UpdatePerson />} />
+            <Route path="/update-collection/:collectionId" element={<UpdateCollection />} />
             <Route path="/add-collection" element={<AddCollection />} />
-            <Route path="/person-collection" element={<PersonFormScreen />} />
             <Route path="/collection/:id" element={<CollectionPage />} />
             <Route path="/conversation/:personId" element={<Conversation />} />
             <Route path="/add-person-collection/:collectionId" element={<AddPersonToCollection />} />

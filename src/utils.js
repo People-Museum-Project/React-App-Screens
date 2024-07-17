@@ -259,15 +259,47 @@ const addPersonCollection = async (personId, collectionId) => {
   }
 };
 
+
 const getCollection = async (collectionId) => {
-  const intCollectionId = parseInt(collectionId, 10);
   try {
     const response = await fetch(`${baseurl}getCollection`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ collectionId: intCollectionId })
+      body: JSON.stringify({ collectionId })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch collection');
+    }
+
+    const data = await response.json();
+    if (data && data.data) {
+      return data.data;
+    } else {
+      throw new Error('Collection not found');
+    }
+  } catch (error) {
+    console.error('Error fetching collection:', error);
+    throw error;
+  }
+};
+
+const updateCollection = async (collectionId, newName, newImageLink, newDescription, newIsPublic) => {
+  try {
+    const response = await fetch(`${baseurl}updateCollection`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        collectionId: parseInt(collectionId, 10),
+        newName: newName,
+        newImageLink: newImageLink,
+        newDescription: newDescription,
+        newIsPublic: newIsPublic,
+      }),
     });
     const data = await response.json();
     console.log('Status:', response.status);
@@ -275,6 +307,25 @@ const getCollection = async (collectionId) => {
     return data;
   } catch (error) {
     console.error('Error:', error.message);
+  }
+};
+
+const deleteCollection = async (collectionId) => {
+  try {
+    const response = await fetch(`${baseurl}deleteCollection`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ collectionId: collectionId })
+    });
+    const data = await response.json();
+    console.log('Status:', response.status);
+    console.log('Data:', data);
+    return data;
+  } catch (error) {
+    console.error('Error:', error.message);
+    throw error;
   }
 };
 
@@ -292,4 +343,6 @@ module.exports = {
   addCollection,
   addPersonCollection,
   getCollection,
+  updateCollection,
+  deleteCollection
 };

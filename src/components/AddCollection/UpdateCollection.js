@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { getCollection, updateCollection, uploadImage, deleteCollection } from '../../utils';
 
 const theme = createTheme({
     palette: {
@@ -43,26 +43,9 @@ const theme = createTheme({
     },
 });
 
-const uploadImage = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-        const response = await axios.post('https://peoplemuseumyeah.uc.r.appspot.com/db', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
-
-        return response.data.imageUrl;
-    } catch (error) {
-        console.error('Error uploading image:', error);
-        throw error;
-    }
-};
-
 const UpdateCollection = () => {
     const { collectionId } = useParams();
+    const navigate = useNavigate();
     const [collection, setCollection] = useState({
         name: '',
         description: '',
@@ -72,21 +55,15 @@ const UpdateCollection = () => {
         picURL: '',
     });
     const [imagePreview, setImagePreview] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchCollection = async () => {
+        const fetchCollectionData = async () => {
+            setLoading(true);
             try {
-                const response = await axios.post(
-                    'https://peoplemuseumyeah.uc.r.appspot.com/db/getCollection',
-                    { collectionId },
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    }
-                );
-                if (response.data && response.data.collection) {
-                    const fetchedCollection = response.data.collection;
+                const fetchedCollection = await getCollection(collectionId);
+                if (fetchedCollection) {
                     setCollection({
                         name: fetchedCollection.name,
                         description: fetchedCollection.description,
@@ -97,14 +74,16 @@ const UpdateCollection = () => {
                         picURL: fetchedCollection.imageLink,
                     }));
                 } else {
-                    console.log('Collection not found');
+                    setError('Collection not found');
                 }
             } catch (error) {
-                console.error('Error fetching collection:', error);
+                setError('Error fetching collection');
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchCollection();
+        fetchCollectionData();
     }, [collectionId]);
 
     const handleFileChange = (e) => {
@@ -135,6 +114,8 @@ const UpdateCollection = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError(null);
 
         let imageUrl = formData.picURL;
 
@@ -142,37 +123,48 @@ const UpdateCollection = () => {
             try {
                 imageUrl = await uploadImage(formData.pic);
             } catch (error) {
-                console.error('Error uploading image:', error);
+                setError('Error uploading image');
+                setLoading(false);
                 return;
             }
         }
 
-        const formDataToSend = {
-            collectionId,
-            newName: collection.name,
-            newImageLink: imageUrl,
-            newDescription: collection.description,
-        };
-
         try {
-            const response = await axios.put(
-                'https://peoplemuseumyeah.uc.r.appspot.com/db/updateCollection',
-                formDataToSend,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
+            const response = await updateCollection(
+                collectionId,
+                collection.name,
+                imageUrl,
+                collection.description,
+                false 
             );
 
-            if (response.status === 200) {
-                console.log('Update successful:', response.data);
-                window.location.href = '/collection-list';
+            if (response) {
+                navigate(`/`);
             } else {
-                console.error('Update failed:', response.data.message);
+                setError('Update failed');
             }
         } catch (error) {
-            console.error('Error updating collection:', error);
+            setError('Error updating collection');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDelete = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await deleteCollection(collectionId);
+            if (response && response.message === 'Collection deleted successfully') {
+                navigate('/');
+            } else {
+                setError('Delete failed');
+            }
+        } catch (error) {
+            setError('Error deleting collection');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -201,6 +193,11 @@ const UpdateCollection = () => {
                 <Typography variant="h4" gutterBottom color="white">
                     Update Collection
                 </Typography>
+                {error && (
+                    <Typography variant="body1" color="error" gutterBottom>
+                        {error}
+                    </Typography>
+                )}
                 <TextField
                     sx={{ marginBottom: 2, width: '300px' }}
                     label="Name"
@@ -254,8 +251,18 @@ const UpdateCollection = () => {
                     variant="contained"
                     color="primary"
                     sx={{ marginTop: 2, width: '300px' }}
+                    disabled={loading}
                 >
-                    Update
+                    {loading ? 'Updating...' : 'Update'}
+                </Button>
+                <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleDelete}
+                    sx={{ marginTop: 2, width: '300px' }}
+                    disabled={loading}
+                >
+                    {loading ? 'Deleting...' : 'Delete'}
                 </Button>
             </Box>
         </ThemeProvider>
