@@ -16,3 +16,7 @@ npm install
 //run the frontend
 
 npm start
+
+//if you want to change the server url you can change the baseurl in utils.js
+
+const baseurl = 'http://127.0.0.1:8080/db/';
