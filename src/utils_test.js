@@ -29,7 +29,6 @@ async function test() {
     // console.log('getPersonListByCollection:', personListByCollection);
 
     const collectionList = await getCollectionList('1');
-    console.log('getCollectionList page 1:', collectionList);
 
     // const collectionListWithPage = await getCollectionList('1', 2);
     // console.log('getCollectionList page 2:', collectionListWithPage);

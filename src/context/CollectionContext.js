@@ -1,4 +1,3 @@
-// src/context/CollectionContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getCollectionList } from '../utils';
 
@@ -15,7 +14,7 @@ export const CollectionProvider = ({ children }) => {
     try {
       const response = await getCollectionList('1');
       if (response && response.data) {
-        setCollections(response.data);
+        setCollections(response.data);  // Ensure this data is an array
       }
     } catch (error) {
       console.error('Error fetching collections:', error);
