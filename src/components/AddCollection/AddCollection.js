@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, TextField, Button, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useCollections } from '../../context/CollectionContext';
+import { addCollection } from '../../utils';
 
 const theme = createTheme({
   palette: {
@@ -181,28 +182,10 @@ const AddCollection = () => {
 
   const handleCollectionSubmit = async (formData, resetForm) => {
     try {
-      const response = await fetch('https://peoplemuseumyeah.uc.r.appspot.com/db/addCollection', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: formData.userId,
-          name: formData.collectionName,
-          imageLink: formData.imageLink,
-          description: formData.description,
-          isPublic: formData.isPublic,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const responseData = await response.json();
-      console.log('Collection added successfully:', responseData);
-      await fetchCollections(); // 重新获取 collections 数据
-      navigate('/'); // 添加成功后导航回主页
+      const response = await addCollection(formData);
+      console.log('Collection added successfully:', response);
+      await fetchCollections(); // Refresh collections data
+      navigate('/'); // Navigate to the home page on success
     } catch (error) {
       console.error('Error adding collection:', error);
     }

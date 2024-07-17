@@ -81,6 +81,23 @@ const getPerson = async (personId) => {
   }
 };
 
+const addPerson = async (formDataToSend) => {
+  try {
+    const response = await fetch(`${baseurl}addPerson`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formDataToSend),
+    });
+    const data = await response.json();
+    console.log('Status:', response.status);
+    console.log('Data:', data);
+    return data;
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+};
 
 const updatePerson = async (personId, newName, newImageLink, newDescription, newContext, newPublic) => {
   try {
@@ -191,6 +208,34 @@ const getCollectionList = async (userId, page = 1, limit = 10, sortBy = 'name', 
   }
 };
 
+const addCollection = async (formData) => {
+  try {
+    const response = await fetch(`${baseurl}addCollection`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: formData.userId,
+        name: formData.collectionName,
+        imageLink: formData.imageLink,
+        description: formData.description,
+        isPublic: formData.isPublic,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error adding collection:', error.message);
+    throw error;
+  }
+};
+
 const addPersonCollection = async (personId, collectionId) => {
   const intPersonId = parseInt(personId, 10);
   const intCollectionId = parseInt(collectionId, 10);
@@ -238,11 +283,13 @@ module.exports = {
   getUser,
   updateUser,
   getPerson,
+  addPerson,
   updatePerson,
   deletePerson,
   getPersonList,
   getCollectionList,
   getPersonListByCollection,
+  addCollection,
   addPersonCollection,
   getCollection,
 };

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { getPerson, updatePerson, uploadImage, deletePerson } from '../../utils'; // Import deletePerson function
+import { getPerson, updatePerson, uploadImage, deletePerson } from '../../utils'; 
 
 const theme = createTheme({
   palette: {

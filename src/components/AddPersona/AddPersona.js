@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // 导入 useNavigate
+import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { addPerson } from '../../utils'; 
 
 const theme = createTheme({
   palette: {
@@ -53,7 +54,7 @@ const AddPersona = () => {
     collectionId: 'collection1',
   });
   const [imagePreview, setImagePreview] = useState(null);
-  const navigate = useNavigate(); // 使用 useNavigate
+  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -87,17 +88,9 @@ const AddPersona = () => {
     };
 
     try {
-      const response = await fetch('https://peoplemuseumyeah.uc.r.appspot.com/db/addPerson', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formDataToSend),
-      });
-
-      const responseData = await response.json();
+      const responseData = await addPerson(formDataToSend);
       console.log('Person added successfully:', responseData);
-      navigate('/'); // 添加成功后导航回主页
+      navigate('/');
     } catch (error) {
       console.error('Error adding person:', error);
     }
