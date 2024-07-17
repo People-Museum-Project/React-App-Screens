@@ -1,5 +1,3 @@
-// src/App.js
-
 import React from 'react';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import HomePage from './components/HomePage/HomePage';
@@ -42,9 +40,9 @@ const App = () => {
             <Route path="/update-person/:personId" element={<UpdatePerson />} />
             <Route path="/add-collection" element={<AddCollection />} />
             <Route path="/person-collection" element={<PersonFormScreen />} />
-            <Route path="/add-person-collection" element={<AddPersonToCollection />} />
             <Route path="/collection/:id" element={<CollectionPage />} />
             <Route path="/conversation/:personId" element={<Conversation />} />
+            <Route path="/add-person-collection/:collectionId" element={<AddPersonToCollection />} />
           </Routes>
         </Router>
       </CollectionProvider>

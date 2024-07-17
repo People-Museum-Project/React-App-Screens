@@ -19,7 +19,7 @@ async function test() {
     // const updatedUser = await getUser('5639601012080640');
     // console.log('updatedUser:', updatedUser);
 
-    // const personList1 = await getPersonList('1');
+    const personList1 = await getPersonList('1');
     // console.log('getPersonList page 1:', personList1);
 
     // const personList2 = await getPersonList('1', 1, 10);
@@ -28,7 +28,7 @@ async function test() {
     // const personListByCollection = await getPersonListByCollection(5675594515742720);
     // console.log('getPersonListByCollection:', personListByCollection);
 
-    const collectionList = await getCollectionList('1');
+    //const collectionList = await getCollectionList('1');
 
     // const collectionListWithPage = await getCollectionList('1', 2);
     // console.log('getCollectionList page 2:', collectionListWithPage);

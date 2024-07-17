@@ -35,7 +35,7 @@ const CollectionPage = () => {
       <h1>{collection.name}</h1>
       <p>{collection.description}</p>
       {collection.imageLink && <img src={collection.imageLink} alt={collection.name} style={{ maxWidth: '100%' }} />}
-      <Link to="/add-person-collection">
+      <Link to={`/add-person-collection/${collectionId}`}>
         <Button variant="contained" color="primary" style={{ marginTop: '20px' }}>
           Add Persona To Collection
         </Button>
@@ -44,7 +44,7 @@ const CollectionPage = () => {
         <Typography variant="h6" gutterBottom>Persons in this Collection:</Typography>
         <List>
           {persons.map(person => (
-            <ListItem key={person.id}>
+            <ListItem key={person.id} button component={Link} to={`/conversation/${person.id}`}>
               <ListItemAvatar>
                 <Avatar src={person.imageLink} alt={person.name} />
               </ListItemAvatar>
