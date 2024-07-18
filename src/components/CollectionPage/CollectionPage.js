@@ -37,7 +37,7 @@ const CollectionPage = () => {
         <h1>{collection.name}</h1>
         <IconButton
           component={Link}
-          to={`/update-collection/${collectionId}`}
+          to={`/update-person-collection/${collectionId}`}
           color="primary"
           sx={{ marginLeft: 1 }}
         >

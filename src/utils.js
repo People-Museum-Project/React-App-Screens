@@ -333,6 +333,24 @@ const deleteCollection = async (collectionId) => {
   }
 };
 
+const deletePersonFromCollection = async (personId, collectionId) => {
+  try {
+    const response = await fetch(`${baseurl}deletePersonFromCollection`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ personId: personId, collectionId: collectionId })
+    });
+    const data = await response.json();
+    console.log('Status:', response.status);
+    console.log('Data:', data);
+    return data;
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+};
+
 module.exports = {
   addUser,
   getUser,
@@ -348,5 +366,6 @@ module.exports = {
   addPersonCollection,
   getCollection,
   updateCollection,
-  deleteCollection
+  deleteCollection,
+  deletePersonFromCollection
 };

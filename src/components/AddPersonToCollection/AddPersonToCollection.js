@@ -12,7 +12,7 @@ const AddPersonToCollection = () => {
   useEffect(() => {
     const fetchPersonList = async () => {
       try {
-        const response = await getPersonList('1'); // Assuming '1' is the userId for demonstration
+        const response = await getPersonList(1); // Assuming '1' is the userId for demonstration
         if (response && response.data) {
           setPeople(response.data);
         }

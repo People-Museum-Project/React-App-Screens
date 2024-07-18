@@ -6,6 +6,7 @@ import UpdatePerson from './components/AddPersona/UpdatePerson';
 import AddCollection from './components/AddCollection/AddCollection';
 import UpdateCollection from './components/AddCollection/UpdateCollection';
 import AddPersonToCollection from './components/AddPersonToCollection/AddPersonToCollection';
+import UpdatePersonCollection from './components/AddPersonToCollection/UpdatePersonCollection';
 import CollectionPage from './components/CollectionPage/CollectionPage';
 import Conversation from './components/Conversation/Conversation';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -39,6 +40,7 @@ const App = () => {
             <Route path="/add-persona" element={<AddPersona />} />
             <Route path="/update-person/:personId" element={<UpdatePerson />} />
             <Route path="/update-collection/:collectionId" element={<UpdateCollection />} />
+            <Route path="/update-person-collection/:collectionId" element={<UpdatePersonCollection />} />
             <Route path="/add-collection" element={<AddCollection />} />
             <Route path="/collection/:id" element={<CollectionPage />} />
             <Route path="/conversation/:personId" element={<Conversation />} />
