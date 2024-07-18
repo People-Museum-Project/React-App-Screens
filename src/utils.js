@@ -135,7 +135,8 @@ const deletePerson = async (personId) => {
   }
 };
 
-const getPersonList = async (userId, page = 1, limit = 10, sortBy = 'name', order = 'asc') => {
+const getPersonList = async (userId, page = 1, limit = 10, sortBy = 'date', ascending = 'true') => {
+  const intUserId = parseInt(userId, 10);
   try {
     const response = await fetch(`${baseurl}getPersonList`, {
       method: 'POST',
@@ -143,11 +144,11 @@ const getPersonList = async (userId, page = 1, limit = 10, sortBy = 'name', orde
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        userId: userId,
+        userId: intUserId,
         page: page,
         limit: limit,
         sortBy: sortBy,
-        order: order
+        ascending: ascending
       })
     });
     const data = await response.json();
@@ -159,7 +160,7 @@ const getPersonList = async (userId, page = 1, limit = 10, sortBy = 'name', orde
   }
 };
 
-const getPersonListByCollection = async (collectionId, page = 1, limit = 10, sortBy = 'name', ascending = 'true') => {
+const getPersonListByCollection = async (collectionId, page = 1, limit = 10, sortBy = 'date', ascending = 'true') => {
   const intCollectionId = parseInt(collectionId, 10);
   try {
     const response = await fetch(`${baseurl}getPersonListByCollection`, {
@@ -184,7 +185,8 @@ const getPersonListByCollection = async (collectionId, page = 1, limit = 10, sor
   }
 };
 
-const getCollectionList = async (userId, page = 1, limit = 10, sortBy = 'name', order = 'asc') => {
+const getCollectionList = async (userId, page = 1, limit = 10, sortBy = 'date', ascending = 'true') => {
+  const intUserId = parseInt(userId, 10);
   try {
     const response = await fetch(`${baseurl}getCollectionList`, {
       method: 'POST',
@@ -192,11 +194,11 @@ const getCollectionList = async (userId, page = 1, limit = 10, sortBy = 'name', 
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        userId: userId,
+        userId: intUserId,
         page: page,
         limit: limit,
         sortBy: sortBy,
-        order: order
+        ascending: ascending
       })
     });
     const data = await response.json();
@@ -209,6 +211,7 @@ const getCollectionList = async (userId, page = 1, limit = 10, sortBy = 'name', 
 };
 
 const addCollection = async (formData) => {
+  const intUserId = parseInt(formData.userId, 10);
   try {
     const response = await fetch(`${baseurl}addCollection`, {
       method: 'POST',
@@ -216,7 +219,7 @@ const addCollection = async (formData) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        userId: formData.userId,
+        userId: intUserId,
         name: formData.collectionName,
         imageLink: formData.imageLink,
         description: formData.description,
@@ -261,13 +264,14 @@ const addPersonCollection = async (personId, collectionId) => {
 
 
 const getCollection = async (collectionId) => {
+  const intCollectionId = parseInt(collectionId, 10);
   try {
     const response = await fetch(`${baseurl}getCollection`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ collectionId })
+      body: JSON.stringify({ intCollectionId })
     });
 
     if (!response.ok) {
