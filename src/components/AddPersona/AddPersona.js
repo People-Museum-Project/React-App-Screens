@@ -50,7 +50,7 @@ const AddPersona = () => {
     description: '',
     pic: null,
     picURL: '',
-    userId: '1',
+    userId: 1,
     collectionId: 'collection1',
   });
   const [imagePreview, setImagePreview] = useState(null);

@@ -47,7 +47,7 @@ const theme = createTheme({
 
 const CollectionForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
-    userId: '1', // Example user ID
+    userId: 1, // Example user ID
     collectionName: '',
     description: '',
     imageLink: '',
