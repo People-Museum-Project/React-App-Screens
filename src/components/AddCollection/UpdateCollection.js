@@ -139,7 +139,7 @@ const UpdateCollection = () => {
             );
 
             if (response) {
-                navigate(`/`);
+                navigate(`/collection/${collectionId}`);
             } else {
                 setError('Update failed');
             }

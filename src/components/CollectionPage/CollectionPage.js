@@ -1,18 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useCollections } from '../../context/CollectionContext';
-import { getPersonListByCollection } from '../../utils';
+import { getCollection, getPersonListByCollection } from '../../utils';
 import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography, Paper, Button, IconButton, Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
 const CollectionPage = () => {
   const { id } = useParams();
-  const { collections } = useCollections();
   const collectionId = parseInt(id, 10);
-  const collection = Array.isArray(collections) ? collections.find(collection => collection.id === collectionId) : null; // Ensure collections is an array
+  const [collection, setCollection] = useState(null);
   const [persons, setPersons] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    const fetchCollectionData = async () => {
+      try {
+        const fetchedCollection = await getCollection(collectionId);
+        if (fetchedCollection) {
+          setCollection(fetchedCollection);
+        } else {
+          setError('Collection not found');
+        }
+      } catch (error) {
+        setError('Error fetching collection');
+        console.error('Error fetching collection data:', error);
+      }
+    };
+
     const fetchPersons = async () => {
       try {
         const response = await getPersonListByCollection(id);
@@ -24,11 +37,16 @@ const CollectionPage = () => {
       }
     };
 
+    fetchCollectionData();
     fetchPersons();
-  }, [id]);
+  }, [collectionId, id]);
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   if (!collection) {
-    return <div>Collection not found</div>;
+    return <div>Loading...</div>;
   }
 
   return (
