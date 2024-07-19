@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useCollections } from '../../context/CollectionContext';
@@ -37,7 +38,7 @@ const CollectionPage = () => {
         <h1>{collection.name}</h1>
         <IconButton
           component={Link}
-          to={`/update-person-collection/${collectionId}`}
+          to={`/update-collection/${collectionId}`}
           color="primary"
           sx={{ marginLeft: 1 }}
         >
@@ -68,7 +69,7 @@ const CollectionPage = () => {
                   edge="end"
                   aria-label="edit"
                   component={Link}
-                  to={`/update-person/${person.id}`}
+                  to={`/update-person-collection/${person.id}`}
                 >
                   <EditIcon />
                 </IconButton>

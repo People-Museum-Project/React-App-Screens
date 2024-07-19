@@ -1,8 +1,9 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { addPerson } from '../../utils'; 
+import { addPerson } from '../../utils';
 
 const theme = createTheme({
   palette: {
