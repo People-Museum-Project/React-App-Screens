@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Container, Box, Typography, IconButton } from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home';
 import EditIcon from '@mui/icons-material/Edit';
 import QuestionForm from './QuestionForm';
 import QuestionList from './QuestionList';
@@ -61,6 +62,14 @@ const Conversation = () => {
       {person ? (
         <>
           <Box component="header" sx={{ textAlign: 'center', mb: 3, position: 'relative' }}>
+            <IconButton
+              component={Link}
+              to="/"
+              color="primary"
+              sx={{ position: 'absolute', top: 16, left: 16 }}
+            >
+              <HomeIcon />
+            </IconButton>
             <img src={person.imageLink} alt={person.name} style={{ maxWidth: 300, height: 'auto', borderRadius: 8 }} />
             <Typography variant="h4" component="h2" sx={{ mt: 4, mb: 2 }}>
               Ask {person.name} a Question
