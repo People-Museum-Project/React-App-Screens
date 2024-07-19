@@ -210,6 +210,31 @@ const getCollectionList = async (userId, page = 1, limit = 10, sortBy = 'date', 
   }
 };
 
+const getCollectionListByPerson = async (personId, page = 1, limit = 10, sortBy = 'name', ascending = 'true') => {
+  const intPersonId = parseInt(personId, 10);
+  try {
+    const response = await fetch(`${baseurl}getCollectionListByPerson`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        personId: intPersonId,
+        page: page,
+        limit: limit,
+        sortBy: sortBy,
+        ascending: ascending
+      })
+    });
+    const data = await response.json();
+    console.log('Status:', response.status);
+    console.log('Data:', data);
+    return data;
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+};
+
 const addCollection = async (formData) => {
   const intUserId = parseInt(formData.userId, 10);
   try {
@@ -360,6 +385,7 @@ module.exports = {
   deletePerson,
   getPersonList,
   getCollectionList,
+  getCollectionListByPerson,
   getPersonListByCollection,
   addCollection,
   addPersonCollection,

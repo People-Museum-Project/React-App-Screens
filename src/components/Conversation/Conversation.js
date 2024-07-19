@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Container, Box, Typography, IconButton } from '@mui/material';
+import { Container, Box, Typography, IconButton, List, ListItem, ListItemText } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import EditIcon from '@mui/icons-material/Edit';
 import QuestionForm from './QuestionForm';
 import QuestionList from './QuestionList';
 import Answer from './Answer';
 import './Conversation.css';
+import { getPerson, getCollectionListByPerson } from '../../utils'; // Import the functions
 
 const Conversation = () => {
   const { personId } = useParams();
@@ -17,30 +18,31 @@ const Conversation = () => {
   ]);
   const [selectedQuestion, setSelectedQuestion] = useState('');
   const [answer, setAnswer] = useState('');
+  const [collections, setCollections] = useState([]); // State for collections
 
   useEffect(() => {
-    fetchPersonData(personId);
-  }, [personId]);
+    const fetchData = async () => {
+      try {
+        const personData = await getPerson(personId);
+        if (personData && personData.person) {
+          setPerson(personData.person);
+        } else {
+          console.error('Person data not found');
+        }
 
-  const fetchPersonData = async (id) => {
-    try {
-      const response = await fetch('https://peoplemuseumyeah.uc.r.appspot.com/db/getPerson', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ personId: id }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setPerson(data.person);
-      } else {
-        console.error(data.message);
+        const collectionData = await getCollectionListByPerson(personId);
+        if (collectionData && collectionData.data) {
+          setCollections(collectionData.data); // Extract collections from data
+        } else {
+          console.error('Collections data not found');
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
       }
-    } catch (error) {
-      console.error('Error fetching person data:', error);
-    }
-  };
+    };
+
+    fetchData();
+  }, [personId]);
 
   const handleAskQuestion = (question) => {
     setSelectedQuestion(question);
@@ -90,6 +92,20 @@ const Conversation = () => {
           <QuestionList questions={questions} onSelectQuestion={handleAskQuestion} />
           <QuestionForm onAskQuestion={handleAskQuestion} />
           {selectedQuestion && <Answer answer={answer} />}
+          <Box sx={{ mt: 4 }}>
+            <Typography variant="h6" gutterBottom>
+              In Collections:
+            </Typography>
+            <List>
+              {collections.map((collection) => (
+                <ListItem key={collection.id}>
+                  <ListItemText
+                    primary={collection.name}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          </Box>
         </>
       ) : (
         <Typography variant="h6" sx={{ textAlign: 'center', mt: 4 }}>
