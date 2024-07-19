@@ -25,7 +25,9 @@ async function test() {
 
     // await getCollectionList('1', 2);
 
-    await addPersonCollection(5632139873746944, 5675594515742720);
+    // await addPersonCollection(5632139873746944, 5675594515742720);
+    await getCollection(5739062455435264);
+	
   } catch (error) {
     console.error('Test function error:', error);
   }
