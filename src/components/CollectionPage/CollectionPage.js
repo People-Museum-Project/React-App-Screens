@@ -48,14 +48,14 @@ const CollectionPage = () => {
       {collection.imageLink && <img src={collection.imageLink} alt={collection.name} style={{ maxWidth: '100%' }} />}
       <Link to={`/add-person-collection/${collectionId}`}>
         <Button variant="contained" color="primary" style={{ marginTop: '20px' }}>
-          Add Persona To Collection
+          Add Person To Collection
         </Button>
       </Link>
       <Paper elevation={3} style={{ marginTop: '20px', padding: '20px' }}>
         <Typography variant="h6" gutterBottom>Persons in this Collection:</Typography>
         <List>
           {persons.map(person => (
-            <ListItem key={person.id} button component={Link} to={`/conversation/${person.id}`}>
+            <ListItem key={person.id} button component={Link} to={`/update-person-collection/${person.id}`} state={{ collectionId }}>
               <ListItemAvatar>
                 <Avatar src={person.imageLink} alt={person.name} />
               </ListItemAvatar>
@@ -69,6 +69,7 @@ const CollectionPage = () => {
                   aria-label="edit"
                   component={Link}
                   to={`/update-person-collection/${person.id}`}
+                  state={{ collectionId }}
                 >
                   <EditIcon />
                 </IconButton>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getPerson, updatePerson, uploadImage, deletePersonFromCollection } from '../../utils';
@@ -7,12 +7,13 @@ import { getPerson, updatePerson, uploadImage, deletePersonFromCollection } from
 const UpdatePersonCollection = () => {
     const { personId } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const [person, setPerson] = useState({ name: '', description: '' });
     const [formData, setFormData] = useState({ pic: null, picURL: '' });
     const [imagePreview, setImagePreview] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [collectionId, setCollectionId] = useState('');
+    const [collectionId, setCollectionId] = useState(location.state?.collectionId || '');
 
     useEffect(() => {
         const fetchPersonData = async () => {
@@ -30,7 +31,9 @@ const UpdatePersonCollection = () => {
                         ...prevFormData,
                         picURL: fetchedPerson.imageLink,
                     }));
-                    setCollectionId(response.collectionId);
+                    if (!collectionId) {
+                        setCollectionId(response.collectionId);
+                    }
                 } else {
                     setError('Person not found');
                 }
@@ -98,7 +101,7 @@ const UpdatePersonCollection = () => {
             );
 
             if (response) {
-                navigate(`/`);
+                navigate(`/collection/${collectionId}`);
             } else {
                 setError('Update failed');
             }
@@ -124,8 +127,10 @@ const UpdatePersonCollection = () => {
         try {
             const response = await deletePersonFromCollection(personId, collectionId);
             if (response && response.message === 'Person removed from collection successfully') {
-                navigate(`/conversation/${personId}`);
+                console.log('Person removed from collection successfully');
+                navigate(`/collection/${collectionId}`);
             } else {
+                console.log('Fail');
                 setError('Delete failed');
             }
         } catch (error) {
