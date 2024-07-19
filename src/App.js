@@ -41,7 +41,7 @@ const App = () => {
             <Route path="/add-persona" element={<AddPersona />} />
             <Route path="/update-person/:personId" element={<UpdatePerson />} />
             <Route path="/update-collection/:collectionId" element={<UpdateCollection />} />
-            <Route path="/update-person-collection/:collectionId" element={<UpdatePersonCollection />} />
+            <Route path="/update-person-collection/:personId" element={<UpdatePersonCollection />} />
             <Route path="/add-collection" element={<AddCollection />} />
             <Route path="/collection/:id" element={<CollectionPage />} />
             <Route path="/conversation/:personId" element={<Conversation />} />

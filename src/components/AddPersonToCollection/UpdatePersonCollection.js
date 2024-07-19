@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -8,18 +7,12 @@ import { getPerson, updatePerson, uploadImage, deletePersonFromCollection } from
 const UpdatePersonCollection = () => {
     const { personId } = useParams();
     const navigate = useNavigate();
-    const [person, setPerson] = useState({
-        name: '',
-        description: '',
-    });
-    const [formData, setFormData] = useState({
-        pic: null,
-        picURL: '',
-    });
+    const [person, setPerson] = useState({ name: '', description: '' });
+    const [formData, setFormData] = useState({ pic: null, picURL: '' });
     const [imagePreview, setImagePreview] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [collectionId, setCollectionId] = useState(''); // Add this state
+    const [collectionId, setCollectionId] = useState('');
 
     useEffect(() => {
         const fetchPersonData = async () => {
@@ -37,7 +30,7 @@ const UpdatePersonCollection = () => {
                         ...prevFormData,
                         picURL: fetchedPerson.imageLink,
                     }));
-                    setCollectionId(response.collectionId); // Set collectionId
+                    setCollectionId(response.collectionId);
                 } else {
                     setError('Person not found');
                 }
@@ -51,7 +44,7 @@ const UpdatePersonCollection = () => {
         fetchPersonData();
     }, [personId]);
 
-    const handleFileChange = useCallback((e) => {
+    const handleFileChange = (e) => {
         const file = e.target.files[0];
         setFormData((prevFormData) => ({
             ...prevFormData,
@@ -65,9 +58,9 @@ const UpdatePersonCollection = () => {
             };
             reader.readAsDataURL(file);
         }
-    }, []);
+    };
 
-    const handleURLChange = useCallback((e) => {
+    const handleURLChange = (e) => {
         const { value } = e.target;
         setFormData((prevFormData) => ({
             ...prevFormData,
@@ -75,7 +68,7 @@ const UpdatePersonCollection = () => {
             pic: null,
         }));
         setImagePreview(value);
-    }, []);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -105,7 +98,7 @@ const UpdatePersonCollection = () => {
             );
 
             if (response) {
-                navigate(`/conversation/${personId}`);
+                navigate(`/`);
             } else {
                 setError('Update failed');
             }
@@ -116,13 +109,13 @@ const UpdatePersonCollection = () => {
         }
     };
 
-    const handleChange = useCallback((event) => {
+    const handleChange = (event) => {
         const { name, value } = event.target;
         setPerson((prevPerson) => ({
             ...prevPerson,
             [name]: value,
         }));
-    }, []);
+    };
 
     const handleDelete = async () => {
         setLoading(true);
@@ -131,7 +124,7 @@ const UpdatePersonCollection = () => {
         try {
             const response = await deletePersonFromCollection(personId, collectionId);
             if (response && response.message === 'Person removed from collection successfully') {
-                navigate('/');
+                navigate(`/conversation/${personId}`);
             } else {
                 setError('Delete failed');
             }
@@ -142,7 +135,7 @@ const UpdatePersonCollection = () => {
         }
     };
 
-    const theme = useMemo(() => createTheme({
+    const theme = createTheme({
         palette: {
             background: {
                 default: '#282c34',
@@ -179,7 +172,7 @@ const UpdatePersonCollection = () => {
                 },
             },
         },
-    }), []);
+    });
 
     return (
         <ThemeProvider theme={theme}>

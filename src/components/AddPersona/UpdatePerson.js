@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
@@ -132,15 +131,7 @@ const UpdatePerson = () => {
     }
 
     try {
-      const response = await updatePerson(
-        personId,
-        person.name,
-        imageUrl,
-        person.description,
-        '',
-        true
-      );
-
+      const response = await updatePerson(personId, person.name, imageUrl, person.description, '', true);
       if (response) {
         navigate(`/conversation/${personId}`);
       } else {
