@@ -264,14 +264,13 @@ const addPersonCollection = async (personId, collectionId) => {
 
 
 const getCollection = async (collectionId) => {
-  const intCollectionId = parseInt(collectionId, 10);
   try {
     const response = await fetch(`${baseurl}getCollection`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ intCollectionId })
+      body: JSON.stringify({ collectionId })
     });
 
     if (!response.ok) {
