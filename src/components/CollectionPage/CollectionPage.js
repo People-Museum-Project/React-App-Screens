@@ -73,7 +73,7 @@ const CollectionPage = () => {
         <Typography variant="h6" gutterBottom>Persons in this Collection:</Typography>
         <List>
           {persons.map(person => (
-            <ListItem key={person.id} button component={Link} to={`/update-person-collection/${person.id}`} state={{ collectionId }}>
+            <ListItem key={person.id} button component={Link} to={`/conversation/${person.id}`} state={{ collectionId }}>
               <ListItemAvatar>
                 <Avatar src={person.imageLink} alt={person.name} />
               </ListItemAvatar>
