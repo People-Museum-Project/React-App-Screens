@@ -1,18 +1,23 @@
 
 // src/components/HomePage/HomePage.js
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Button, Paper, List, ListItem, ListItemText, Box, Avatar, Typography } from '@mui/material';
+import {Link} from 'react-router-dom';
+import {Button, Paper, List, ListItem, ListItemText, Box, Avatar, Typography} from '@mui/material';
 import './HomePage.css';
 import { getUser, getPersonList } from '../../utils';
 import { useCollections } from '../../context/CollectionContext';
 import AddIcon from '@mui/icons-material/Add';
+import { useLocation } from "react-router-dom";
 
 const HomePage = () => {
   const [username, setUserName] = useState('');
   const [userimageLink, setUserImageLink] = useState('');
   const [people, setPeople] = useState([]);
   const { collections, fetchCollections } = useCollections();
+  const location = useLocation();
+  const userData = location.state?.userData; // Access user data from state
+
+  console.log(">>>>>", userData)
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -55,6 +60,22 @@ const HomePage = () => {
         <Avatar src={userimageLink} alt="User" sx={{ width: 50, height: 50 }} />
         <Typography variant="body1" sx={{ ml: 2 }}>
           Username: {username}
+          <div className="profile-container">
+            {userData ? (
+                <div className="profile-info">
+                  <img
+                      src={userData.photoURL}
+                      alt="Profile"
+                      className="profile-image"
+                  />
+                  <h1 className="profile-name">{userData.displayName}</h1>
+                </div>
+            ) : (
+                <Link to="/login">
+                  <button className="login-button">Login</button>
+                </Link>
+            )}
+          </div>
         </Typography>
       </Box>
       <h1>People Museum</h1>
