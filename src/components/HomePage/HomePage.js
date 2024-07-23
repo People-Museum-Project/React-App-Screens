@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button, Paper, List, ListItem, ListItemText, Avatar, Pagination, IconButton } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Paper, List, ListItem, ListItemText, Avatar, Pagination, IconButton, Menu, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AddIcon from '@mui/icons-material/Add';
 import './HomePage.css';
@@ -16,6 +16,8 @@ const HomePage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const { collections, fetchCollections } = useCollections();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
   const limit = 3; // Number of items per page
 
   useEffect(() => {
@@ -56,11 +58,19 @@ const HomePage = () => {
     setPage(value);
   };
 
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <div className="homepage">
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu">
+          <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleMenuClick}>
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" style={{ flexGrow: 1 }}>
@@ -73,6 +83,15 @@ const HomePage = () => {
           ) : (
             <SignInWithGoogle />
           )}
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleMenuClose}
+          >
+            <MenuItem component={Link} to="/" onClick={handleMenuClose}>My Stuff</MenuItem>
+            <MenuItem component={Link} to="/explore" onClick={handleMenuClose}>Explore</MenuItem>
+            <MenuItem component={Link} to="/about" onClick={handleMenuClose}>About</MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
       <div className="content">
