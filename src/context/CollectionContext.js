@@ -1,5 +1,5 @@
 //src/context/CollectionContext.js
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { getCollectionList } from '../utils';
 import { auth } from '../components/Login/firebase';
 
@@ -12,7 +12,7 @@ export const useCollections = () => {
 export const CollectionProvider = ({ children }) => {
   const [collections, setCollections] = useState([]);
 
-  const fetchCollections = async () => {
+  const fetchCollections = useCallback(async () => {
     auth.onAuthStateChanged(async (user) => {
       if (user) {
         try {
@@ -27,11 +27,11 @@ export const CollectionProvider = ({ children }) => {
         console.log('user is null');
       }
     });
-  };
+  }, []);
 
   useEffect(() => {
     fetchCollections();
-  }, []);
+  }, [fetchCollections]);
 
   return (
     <CollectionContext.Provider value={{ collections, fetchCollections }}>

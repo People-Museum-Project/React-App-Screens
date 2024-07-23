@@ -84,7 +84,7 @@ const AddPersona = () => {
       imageLink: formData.picURL,
       description: formData.description,
       context: "Example context",
-      userId: formData.userId,
+      googleUserId: formData.userId,
       collectionId: formData.collectionId,
       public: true,
     };
