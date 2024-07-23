@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
+import { Box, TextField, Button, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { getCollection, updateCollection, uploadImage, deleteCollection } from '../../utils';
 
 const theme = createTheme({
@@ -188,8 +189,24 @@ const UpdateCollection = () => {
                     justifyContent: 'center',
                     minHeight: '100vh',
                     p: 2,
+                    position: 'relative', // Ensure positioning context for back button
                 }}
             >
+                {/* Back button */}
+                <Button
+                    startIcon={<ArrowBackIcon />}
+                    onClick={() => navigate(-1)}
+                    sx={{
+                        position: 'absolute',
+                        top: 16,
+                        left: '42%',
+                        transform: 'translateX(-50%)', // Center horizontally
+                        color: 'white',
+                    }}
+                >
+                    Back
+                </Button>
+
                 <Typography variant="h4" gutterBottom color="white">
                     Update Collection
                 </Typography>

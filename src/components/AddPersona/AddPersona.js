@@ -1,8 +1,8 @@
-//src/components/AddPersona.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { addPerson } from '../../utils';
 import { auth } from "../Login/firebase";
 
@@ -45,7 +45,7 @@ const theme = createTheme({
   },
 });
 
-const AddPersona = () => {
+const PersonForm = ({ onSubmit, navigate }) => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -55,8 +55,8 @@ const AddPersona = () => {
     userId: auth.currentUser.uid,
     collectionId: '',
   });
+
   const [imagePreview, setImagePreview] = useState(null);
-  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -76,9 +76,141 @@ const AddPersona = () => {
     setImagePreview(value);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(formData, () => {
+      setFormData({
+        firstName: '',
+        lastName: '',
+        description: '',
+        pic: null,
+        picURL: '',
+        userId: auth.currentUser.uid,
+        collectionId: '',
+      });
+      setImagePreview(null);
+    });
+  };
+
+  return (
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        p: 2,
+        position: 'relative',
+      }}
+    >
+      {/* Back button */}
+      <Button
+        startIcon={<ArrowBackIcon />}
+        onClick={() => navigate(-1)}
+        sx={{
+          position: 'absolute',
+          top: 16,
+          left: 16,
+          color: 'white',
+        }}
+      >
+        Back
+      </Button>
+
+      <Typography variant="h4" gutterBottom color="white">
+        Add Person to Museum
+      </Typography>
+      <TextField
+        sx={{ marginBottom: 2, width: '300px' }}
+        label="First Name"
+        variant="outlined"
+        name="firstName"
+        value={formData.firstName}
+        onChange={handleChange}
+        required
+        InputLabelProps={{ style: { color: 'white' } }}
+      />
+      <TextField
+        sx={{ marginBottom: 2, width: '300px' }}
+        label="Last Name"
+        variant="outlined"
+        name="lastName"
+        value={formData.lastName}
+        onChange={handleChange}
+        required
+        InputLabelProps={{ style: { color: 'white' } }}
+      />
+      <TextField
+        sx={{ marginBottom: 2, width: '300px' }}
+        label="Description"
+        variant="outlined"
+        name="description"
+        value={formData.description}
+        onChange={handleChange}
+        multiline
+        rows={4}
+        required
+        InputLabelProps={{ style: { color: 'white' } }}
+      />
+      <Box sx={{ width: '300px', marginBottom: 2 }}>
+        <TextField
+          fullWidth
+          label="Image URL"
+          variant="outlined"
+          name="picURL"
+          value={formData.picURL}
+          onChange={handleURLChange}
+          InputLabelProps={{ style: { color: 'white' } }}
+        />
+        <Button
+          variant="contained"
+          component="label"
+          sx={{ marginTop: 1 }}
+        >
+          Upload Image
+          <input
+            type="file"
+            name="pic"
+            hidden
+            onChange={handleFileChange}
+          />
+        </Button>
+      </Box>
+      {imagePreview && (
+        <Card sx={{ maxWidth: 300, marginBottom: 2 }}>
+          <CardMedia
+            component="img"
+            height="auto"
+            image={imagePreview}
+            alt="Uploaded Image Preview"
+            sx={{ objectFit: 'contain' }}
+          />
+        </Card>
+      )}
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        sx={{ marginTop: 2, width: '300px' }}
+      >
+        Create
+      </Button>
+    </Box>
+  );
+};
+
+const AddPersona = () => {
+  const navigate = useNavigate();
+
+  const handlePersonSubmit = async (formData, resetForm) => {
     const formDataToSend = {
       name: `${formData.firstName} ${formData.lastName}`,
       imageLink: formData.picURL,
@@ -92,6 +224,7 @@ const AddPersona = () => {
     try {
       const responseData = await addPerson(formDataToSend);
       console.log('Person added successfully:', responseData);
+      resetForm();
       navigate('/');
     } catch (error) {
       console.error('Error adding person:', error);
@@ -101,95 +234,14 @@ const AddPersona = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box
-        component="form"
-        onSubmit={handleSubmit}
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
           minHeight: '100vh',
-          p: 2,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
-        <Typography variant="h4" gutterBottom color="white">
-          Add Person to Museum
-        </Typography>
-        <TextField
-          sx={{ marginBottom: 2, width: '300px' }}
-          label="First Name"
-          variant="outlined"
-          name="firstName"
-          value={formData.firstName}
-          onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-          required
-          InputLabelProps={{ style: { color: 'white' } }}
-        />
-        <TextField
-          sx={{ marginBottom: 2, width: '300px' }}
-          label="Last Name"
-          variant="outlined"
-          name="lastName"
-          value={formData.lastName}
-          onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-          required
-          InputLabelProps={{ style: { color: 'white' } }}
-        />
-        <TextField
-          sx={{ marginBottom: 2, width: '300px' }}
-          label="Description"
-          variant="outlined"
-          name="description"
-          value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          multiline
-          rows={4}
-          required
-          InputLabelProps={{ style: { color: 'white' } }}
-        />
-        <Box sx={{ marginBottom: 2, width: '300px' }}>
-          <TextField
-            fullWidth
-            label="Image URL"
-            variant="outlined"
-            name="picURL"
-            value={formData.picURL}
-            onChange={handleURLChange}
-            InputLabelProps={{ style: { color: 'white' } }}
-          />
-          <Button
-            variant="contained"
-            component="label"
-            sx={{ marginTop: 1 }}
-          >
-            Upload Image
-            <input
-              type="file"
-              name="pic"
-              hidden
-              onChange={handleFileChange}
-            />
-          </Button>
-        </Box>
-        {imagePreview && (
-          <Card sx={{ maxWidth: 300, marginBottom: 2 }}>
-            <CardMedia
-              component="img"
-              height="auto"
-              image={imagePreview}
-              alt="Uploaded Image Preview"
-              sx={{ objectFit: 'contain' }}
-            />
-          </Card>
-        )}
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          sx={{ marginTop: 2, width: '300px' }}
-        >
-          Create
-        </Button>
+        <PersonForm onSubmit={handlePersonSubmit} navigate={navigate} />
       </Box>
     </ThemeProvider>
   );

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // Import ArrowBack icon
 import { getPerson, updatePerson, uploadImage, deletePersonFromCollection } from '../../utils';
 
 const UpdatePersonCollection = () => {
@@ -45,7 +46,7 @@ const UpdatePersonCollection = () => {
         };
 
         fetchPersonData();
-    }, [personId]);
+    }, [personId, collectionId]);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -191,11 +192,28 @@ const UpdatePersonCollection = () => {
                     justifyContent: 'center',
                     minHeight: '100vh',
                     p: 2,
+                    position: 'relative', // Ensure positioning context for back button
                 }}
             >
-                <Typography variant="h4" gutterBottom color="white">
+                {/* Back button */}
+                <Button
+                    startIcon={<ArrowBackIcon />}
+                    onClick={() => navigate(-1)}
+                    sx={{
+                        position: 'absolute',
+                        top: 16,
+                        left: '39%',
+                        color: 'white',
+                    }}
+                >
+                    Back
+                </Button>
+
+                {/* Title */}
+                <Typography variant="h4" gutterBottom color="white" sx={{ mt: 8 }}>
                     Update Person
                 </Typography>
+
                 {error && (
                     <Typography variant="body1" color="error" gutterBottom>
                         {error}

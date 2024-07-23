@@ -1,8 +1,8 @@
-// src/components/AddCollection/AddCollection.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, TextField, Button, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // Import ArrowBack icon
 import { useCollections } from '../../context/CollectionContext';
 import { addCollection } from '../../utils';
 import { auth } from '../Login/firebase';
@@ -46,7 +46,7 @@ const theme = createTheme({
   },
 });
 
-const CollectionForm = ({ onSubmit }) => {
+const CollectionForm = ({ onSubmit, navigate }) => { // Add navigate as a prop
   const [formData, setFormData] = useState({
     userId: auth.currentUser.uid, // Example user ID
     collectionName: '',
@@ -103,8 +103,23 @@ const CollectionForm = ({ onSubmit }) => {
         justifyContent: 'center',
         minHeight: '100vh',
         p: 2,
+        position: 'relative', // Ensure positioning context for back button
       }}
     >
+      {/* Back button */}
+      <Button
+        startIcon={<ArrowBackIcon />}
+        onClick={() => navigate(-1)} // Use the navigate prop
+        sx={{
+          position: 'absolute',
+          top: 16,
+          left: 16,
+          color: 'white',
+        }}
+      >
+        Back
+      </Button>
+
       <Typography variant="h4" gutterBottom color="white">
         Add Collection to Museum
       </Typography>
@@ -202,7 +217,7 @@ const AddCollection = () => {
           alignItems: 'center',
         }}
       >
-        <CollectionForm onSubmit={handleCollectionSubmit} />
+        <CollectionForm onSubmit={handleCollectionSubmit} navigate={navigate} /> {/* Pass navigate as a prop */}
       </Box>
     </ThemeProvider>
   );

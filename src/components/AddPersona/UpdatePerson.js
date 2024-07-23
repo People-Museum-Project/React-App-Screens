@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // Import ArrowBack icon
 import { getPerson, updatePerson, uploadImage, deletePerson } from '../../utils';
 
 const theme = createTheme({
@@ -173,8 +174,6 @@ const UpdatePerson = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box
-        component="form"
-        onSubmit={handleSubmit}
         sx={{
           display: 'flex',
           flexDirection: 'column',
@@ -182,11 +181,28 @@ const UpdatePerson = () => {
           justifyContent: 'center',
           minHeight: '100vh',
           p: 2,
+          position: 'relative', // Ensure positioning context for back button
         }}
       >
-        <Typography variant="h4" gutterBottom color="white">
+        {/* Back button */}
+        <Button
+          startIcon={<ArrowBackIcon />}
+          onClick={() => navigate(-1)}
+          sx={{
+            position: 'absolute',
+            top: 16,
+            left: '39%',
+            color: 'white',
+          }}
+        >
+          Back
+        </Button>
+
+        {/* Title */}
+        <Typography variant="h4" gutterBottom color="white" sx={{ mt: 8 }}>
           Update Person
         </Typography>
+
         {error && (
           <Typography variant="body1" color="error" gutterBottom>
             {error}
