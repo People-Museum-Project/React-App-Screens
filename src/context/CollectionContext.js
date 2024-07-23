@@ -1,5 +1,7 @@
+//src/context/CollectionContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getCollectionList } from '../utils';
+import { auth } from '../components/Login/firebase';
 
 const CollectionContext = createContext();
 
@@ -11,14 +13,20 @@ export const CollectionProvider = ({ children }) => {
   const [collections, setCollections] = useState([]);
 
   const fetchCollections = async () => {
-    try {
-      const response = await getCollectionList('1');
-      if (response && response.data) {
-        setCollections(response.data);  // Ensure this data is an array
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        try {
+          const response = await getCollectionList(user.uid);
+          if (response && response.data) {
+            setCollections(response.data);
+          }
+        } catch (error) {
+          console.error('Error fetching collections:', error);
+        }
+      } else {
+        console.log('user is null');
       }
-    } catch (error) {
-      console.error('Error fetching collections:', error);
-    }
+    });
   };
 
   useEffect(() => {

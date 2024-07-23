@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getPersonList, addPersonCollection } from '../../utils';
 import { Button, Card, CardMedia, Typography, Box } from '@mui/material';
+import { auth } from '../Login/firebase';
 
 const AddPersonToCollection = () => {
   const { collectionId } = useParams();
@@ -12,14 +13,20 @@ const AddPersonToCollection = () => {
 
   useEffect(() => {
     const fetchPersonList = async () => {
-      try {
-        const response = await getPersonList(1); // Assuming '1' is the userId for demonstration
-        if (response && response.data) {
-          setPeople(response.data);
+      auth.onAuthStateChanged(async (user) => {
+        if (user) {
+          try {
+            const response = await getPersonList(user.uid);
+            if (response && response.data) {
+              setPeople(response.data);
+            }
+          } catch (error) {
+            console.error('Error getPersonList:', error);
+          }
+        } else {
+          console.log('user is null');
         }
-      } catch (error) {
-        console.error('Error fetching person list:', error);
-      }
+      });
     };
 
     fetchPersonList();

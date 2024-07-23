@@ -1,83 +1,65 @@
-
-// src/components/HomePage/HomePage.js
+// HomePage.js
 import React, { useEffect, useState } from 'react';
-import {Link} from 'react-router-dom';
-import {Button, Paper, List, ListItem, ListItemText, Box, Avatar, Typography} from '@mui/material';
+import { Link } from 'react-router-dom';
+import { Button, Paper, List, ListItem, ListItemText, Avatar } from '@mui/material';
 import './HomePage.css';
 import { getUser, getPersonList } from '../../utils';
 import { useCollections } from '../../context/CollectionContext';
 import AddIcon from '@mui/icons-material/Add';
-import { useLocation } from "react-router-dom";
+import { auth } from '../Login/firebase';
+import SignInWithGoogle from "../Login/SignInWithGoogle";
 
 const HomePage = () => {
-  const [username, setUserName] = useState('');
   const [userimageLink, setUserImageLink] = useState('');
   const [people, setPeople] = useState([]);
   const { collections, fetchCollections } = useCollections();
-  const location = useLocation();
-  const userData = location.state?.userData; // Access user data from state
-
-  console.log(">>>>>", userData)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response_getuser = await getUser('5639601012080640');
-        if (response_getuser && response_getuser.data) {
-          setUserName(response_getuser.data.name);
-          setUserImageLink(response_getuser.data.imageLink);
-        }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setIsLoggedIn(true);
+        setUserImageLink(user.photoURL);
+        fetchPeopleData(user);
+      } else {
+        setIsLoggedIn(false);
+        setUserImageLink('');
       }
-    };
+    });
 
-    fetchUserData();
+    return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    const fetchPeopleData = async () => {
-      try {
-        const response_getpersonlist = await getPersonList('1');
+  const fetchPeopleData = async (user) => {
+    try {
+      if (user) {
+        const response_getpersonlist = await getPersonList(user.uid);
         if (response_getpersonlist && response_getpersonlist.data) {
           setPeople(response_getpersonlist.data);
         }
-      } catch (error) {
-        console.error('Error fetching people data:', error);
       }
-    };
-
-    fetchPeopleData();
-  }, []);
+    } catch (error) {
+      console.error('Error fetching people data:', error);
+    }
+  };
 
   useEffect(() => {
     fetchCollections();
-  }, []);
+  }, [fetchCollections]);
 
   return (
     <div className="homepage">
-      <Box display="flex" alignItems="center" p={2}>
-        <Avatar src={userimageLink} alt="User" sx={{ width: 50, height: 50 }} />
-        <Typography variant="body1" sx={{ ml: 2 }}>
-          Username: {username}
-          <div className="profile-container">
-            {userData ? (
-                <div className="profile-info">
-                  <img
-                      src={userData.photoURL}
-                      alt="Profile"
-                      className="profile-image"
-                  />
-                  <h1 className="profile-name">{userData.displayName}</h1>
-                </div>
-            ) : (
-                <Link to="/login">
-                  <button className="login-button">Login</button>
-                </Link>
-            )}
-          </div>
-        </Typography>
-      </Box>
+      <div className="profile-user" style={{ position: 'absolute', top: '10px', right: '30px' }}>
+        {isLoggedIn ? (
+          <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <div className="profile-info">
+              <Avatar src={userimageLink} alt="Profile" />
+            </div>
+          </Link>
+        ) : (
+          <SignInWithGoogle />
+        )}
+      </div>
       <h1>People Museum</h1>
       <div className="photo-wall">
         {people.map(person => (
@@ -111,6 +93,6 @@ const HomePage = () => {
       </div>
     </div>
   );
-};
+}
 
 export default HomePage;

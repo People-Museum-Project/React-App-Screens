@@ -1,6 +1,7 @@
+//src/utils.js
 const baseurl = 'http://127.0.0.1:8080/db/';
 
-const addUser = async (name, imageLink, description) => {
+const addUser = async (name, imageLink, description, favourite, googleUserId, gmail) => {
   try {
     const response = await fetch(`${baseurl}addUser`, {
       method: 'POST',
@@ -10,7 +11,10 @@ const addUser = async (name, imageLink, description) => {
       body: JSON.stringify({
         name: name,
         imageLink: imageLink,
-        description: description
+        googleUserId: googleUserId,
+        favourite: favourite,
+        description: description,
+        gmail: gmail
       })
     });
     const data = await response.json();
@@ -22,18 +26,21 @@ const addUser = async (name, imageLink, description) => {
   }
 };
 
-const getUser = async (userId) => {
+const getUser = async (googleUserId) => {
   try {
     const response = await fetch(`${baseurl}getUser`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ userId: userId })
+      body: JSON.stringify({ googleUserId: googleUserId })
     });
     const data = await response.json();
     console.log('Status:', response.status);
     console.log('Data:', data);
+    if (response.status === 404) {
+      return null;
+    }
     return data;
   } catch (error) {
     console.error('Error:', error.message);
@@ -135,8 +142,7 @@ const deletePerson = async (personId) => {
   }
 };
 
-const getPersonList = async (userId, page = 1, limit = 10, sortBy = 'date', ascending = 'true') => {
-  const intUserId = parseInt(userId, 10);
+const getPersonList = async (googleUserId, page = 1, limit = 10, sortBy = 'date', ascending = 'true') => {
   try {
     const response = await fetch(`${baseurl}getPersonList`, {
       method: 'POST',
@@ -144,11 +150,11 @@ const getPersonList = async (userId, page = 1, limit = 10, sortBy = 'date', asce
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        userId: intUserId,
-        page: page,
-        limit: limit,
+        googleUserId: googleUserId,
         sortBy: sortBy,
-        ascending: ascending
+        ascending: ascending,
+        limit: limit,
+        page: page
       })
     });
     const data = await response.json();
@@ -185,8 +191,7 @@ const getPersonListByCollection = async (collectionId, page = 1, limit = 10, sor
   }
 };
 
-const getCollectionList = async (userId, page = 1, limit = 10, sortBy = 'date', ascending = 'true') => {
-  const intUserId = parseInt(userId, 10);
+const getCollectionList = async (googleUserId, page = 1, limit = 10, sortBy = 'date', ascending = 'true') => {
   try {
     const response = await fetch(`${baseurl}getCollectionList`, {
       method: 'POST',
@@ -194,7 +199,7 @@ const getCollectionList = async (userId, page = 1, limit = 10, sortBy = 'date', 
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        userId: intUserId,
+        googleUserId: googleUserId,
         page: page,
         limit: limit,
         sortBy: sortBy,
@@ -236,7 +241,6 @@ const getCollectionListByPerson = async (personId, page = 1, limit = 10, sortBy 
 };
 
 const addCollection = async (formData) => {
-  const intUserId = parseInt(formData.userId, 10);
   try {
     const response = await fetch(`${baseurl}addCollection`, {
       method: 'POST',
@@ -244,7 +248,7 @@ const addCollection = async (formData) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        userId: intUserId,
+        googleUserId: formData.userId,
         name: formData.collectionName,
         imageLink: formData.imageLink,
         description: formData.description,

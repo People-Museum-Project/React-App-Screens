@@ -1,9 +1,10 @@
-
+//src/components/AddPersona.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { addPerson } from '../../utils';
+import { auth } from "../Login/firebase";
 
 const theme = createTheme({
   palette: {
@@ -51,8 +52,8 @@ const AddPersona = () => {
     description: '',
     pic: null,
     picURL: '',
-    userId: 1,
-    collectionId: 'collection1',
+    userId: auth.currentUser.uid,
+    collectionId: '',
   });
   const [imagePreview, setImagePreview] = useState(null);
   const navigate = useNavigate();

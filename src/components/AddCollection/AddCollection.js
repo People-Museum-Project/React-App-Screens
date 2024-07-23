@@ -1,4 +1,3 @@
-
 // src/components/AddCollection/AddCollection.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +5,7 @@ import { Box, TextField, Button, Typography, Card, CardMedia } from '@mui/materi
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useCollections } from '../../context/CollectionContext';
 import { addCollection } from '../../utils';
+import { auth } from '../Login/firebase';
 
 const theme = createTheme({
   palette: {
@@ -48,7 +48,7 @@ const theme = createTheme({
 
 const CollectionForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
-    userId: 1, // Example user ID
+    userId: auth.currentUser.uid, // Example user ID
     collectionName: '',
     description: '',
     imageLink: '',

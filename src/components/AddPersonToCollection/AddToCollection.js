@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -45,7 +44,7 @@ const theme = createTheme({
 });
 
 const AddToCollection = () => {
-    const { collectionId } = useParams(); // Get collectionId from URL params
+    const { collectionId } = useParams();
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',

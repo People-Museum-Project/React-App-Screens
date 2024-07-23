@@ -1,4 +1,4 @@
-
+//src/App.js
 import React from 'react';
 import {ThemeProvider, createTheme, CssBaseline} from '@mui/material';
 import HomePage from './components/HomePage/HomePage';
@@ -12,7 +12,7 @@ import CollectionPage from './components/CollectionPage/CollectionPage';
 import Conversation from './components/Conversation/Conversation';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CollectionProvider } from './context/CollectionContext';
-import Login from "./components/Login/Login";
+import Profile from './components/Login/profile';
 import "./App.css"
 
 const theme = createTheme({
@@ -40,7 +40,6 @@ const App = () => {
         <Router>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<Login />} />
             <Route path="/add-persona" element={<AddPersona />} />
             <Route path="/update-person/:personId" element={<UpdatePerson />} />
             <Route path="/update-collection/:collectionId" element={<UpdateCollection />} />
@@ -49,6 +48,7 @@ const App = () => {
             <Route path="/collection/:id" element={<CollectionPage />} />
             <Route path="/conversation/:personId" element={<Conversation />} />
             <Route path="/add-person-collection/:collectionId" element={<AddPersonToCollection />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </Router>
       </CollectionProvider>

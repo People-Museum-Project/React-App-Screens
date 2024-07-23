@@ -1,23 +1,25 @@
+//src/components/Login/profile.js
 import React, { useEffect, useState } from "react";
-import { auth, db } from "./firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { auth } from "./firebase";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
     const [userDetails, setUserDetails] = useState(null);
-    const fetchUserData = async () => {
-        auth.onAuthStateChanged(async (user) => {
-            console.log(user);
+    const [error, setError] = useState(null);
+    const navigate = useNavigate(); // 使用 useNavigate 钩子
 
-            const docRef = doc(db, "Users", user.uid);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                setUserDetails(docSnap.data());
-                console.log(docSnap.data());
-            } else {
-                console.log("User is not logged in");
-            }
-        });
+    const fetchUserData = () => {
+        const user = auth.currentUser;
+        console.log("Login user:", user);
+        if (user) {
+            setUserDetails({
+                photo: user.photoURL,
+                name: user.displayName,
+                email: user.email
+            });
+        }
     };
+
     useEffect(() => {
         fetchUserData();
     }, []);
@@ -25,24 +27,25 @@ function Profile() {
     async function handleLogout() {
         try {
             await auth.signOut();
-            window.location.href = "/login";
+            navigate("/"); // 导航到主页
             console.log("User logged out successfully!");
         } catch (error) {
             console.error("Error logging out:", error.message);
         }
     }
+
     return (
         <div>
+            {error && <p>{error}</p>}
             {userDetails ? (
                 <>
-                    <div style={{ display: "flex", justifyContent: "center" }}>
-                        <img src={userDetails.photo} width={"40%"} style={{ borderRadius: "50%" }} />
+                    <div style={{ display: "flex", justifyContent: "flex-start" }}>
+                        <img src={userDetails.photo} className="photo-wall"/>
                     </div>
-                    <h3>Welcome {userDetails.firstName} 🙏🙏</h3>
+                    <h3>Welcome {userDetails.name}</h3>
                     <div>
                         <p>Email: {userDetails.email}</p>
-                        <p>First Name: {userDetails.firstName}</p>
-                        {/* <p>Last Name: {userDetails.lastName}</p> */}
+                        <p>Name: {userDetails.name}</p>
                     </div>
                     <button className="btn btn-primary" onClick={handleLogout}>
                         Logout
@@ -54,4 +57,5 @@ function Profile() {
         </div>
     );
 }
+
 export default Profile;
