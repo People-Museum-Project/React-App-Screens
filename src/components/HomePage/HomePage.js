@@ -1,22 +1,22 @@
-// HomePage.js
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Paper, List, ListItem, ListItemText, Avatar, Pagination } from '@mui/material';
-import './HomePage.css';
-import { getUser, getPersonList } from '../../utils';
-import { useCollections } from '../../context/CollectionContext';
+import { AppBar, Toolbar, Typography, Button, Paper, List, ListItem, ListItemText, Avatar, Pagination, IconButton } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import AddIcon from '@mui/icons-material/Add';
+import './HomePage.css';
+import { getPersonList } from '../../utils';
+import { useCollections } from '../../context/CollectionContext';
 import { auth } from '../Login/firebase';
 import SignInWithGoogle from "../Login/SignInWithGoogle";
 
 const HomePage = () => {
-  const [userimageLink, setUserImageLink] = useState('');
+  const [userImageLink, setUserImageLink] = useState('');
   const [people, setPeople] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const { collections, fetchCollections } = useCollections();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const limit = 3; // 每页显示的数据量
+  const limit = 3; // Number of items per page
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -36,11 +36,10 @@ const HomePage = () => {
   const fetchPeopleData = async (user, page, limit) => {
     try {
       if (user) {
-        const response_getpersonlist = await getPersonList(user.uid, page, limit);
-        if (response_getpersonlist && response_getpersonlist.data) {
-          setPeople(response_getpersonlist.data);
-          // 你可以根据已知的总记录数计算总页数
-          const totalRecords = 10; // 假设总记录数为30，替换为你的实际总记录数
+        const response = await getPersonList(user.uid, page, limit);
+        if (response && response.data) {
+          setPeople(response.data);
+          const totalRecords = 10; // Replace with actual total records
           setTotalPages(Math.ceil(totalRecords / limit));
         }
       }
@@ -59,48 +58,63 @@ const HomePage = () => {
 
   return (
     <div className="homepage">
-      <div className="profile-user" style={{ position: 'absolute', top: '10px', right: '30px' }}>
-        {isLoggedIn ? (
-          <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <div className="profile-info">
-              <Avatar src={userimageLink} alt="Profile" />
-            </div>
-          </Link>
-        ) : (
-          <SignInWithGoogle />
-        )}
-      </div>
-      <h1>People Museum</h1>
-      <div className="photo-wall">
-        {people && people.map(person => (
-          <div key={person.id} className="person-container">
-            <Link to={`/conversation/${person.id}`}>
-              <img src={person.imageLink} alt={person.name} className="photo" />
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton edge="start" color="inherit" aria-label="menu">
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" style={{ flexGrow: 1 }}>
+            People Museum
+          </Typography>
+          {isLoggedIn ? (
+            <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <Avatar src={userImageLink} alt="Profile" />
             </Link>
-            <p className="photo-name">{person.name}</p>
-          </div>
-        ))}
-        <div className="person-container">
-          <Link to="/add-persona">
-            <AddIcon className="photo add-photo" style={{ fontSize: '150px', color: '#fff' }} />
-          </Link>
-          <p className="photo-name">Add New Persona</p>
-        </div>
-      </div>
-      <Pagination count={totalPages} page={page} onChange={handlePageChange} style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }} />
-      <Paper elevation={3} style={{ margin: '20px auto', padding: '20px', maxWidth: '600px' }}>
-        <List>
-          {collections && collections.map((collection) => (
-            <ListItem key={collection.id} button component={Link} to={`/collection/${collection.id}`}>
-              <ListItemText primary={collection.name} />
-            </ListItem>
+          ) : (
+            <SignInWithGoogle />
+          )}
+        </Toolbar>
+      </AppBar>
+      <div className="content">
+        <Typography variant="h5" className="section-title custom-title">
+          My Interest Network
+        </Typography>
+        <div className="photo-wall">
+          {people && people.map(person => (
+            <div key={person.id} className="person-container">
+              <Link to={`/conversation/${person.id}`}>
+                <img src={person.imageLink} alt={person.name} className="photo" />
+              </Link>
+              <p className="photo-name">{person.name}</p>
+            </div>
           ))}
-        </List>
-      </Paper>
-      <div className="buttons" style={{ marginTop: '20px' }}>
-        <Link to="/add-collection">
-          <Button variant="contained" style={{ backgroundColor: '#fff', color: '#000' }}>Add Collection</Button>
-        </Link>
+          <div className="person-container">
+            <Link to="/add-persona" className="add-persona">
+              <div className="photo add-photo">
+                <AddIcon />
+              </div>
+            </Link>
+            <p className="photo-name">Add New Persona</p>
+          </div>
+        </div>
+        <Pagination count={totalPages} page={page} onChange={handlePageChange} style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '30px' }} />
+        <Typography variant="h6" className="collection-title">
+          My Collection's
+        </Typography>
+        <Paper elevation={3} style={{ margin: '20px auto', padding: '20px', maxWidth: '600px' }}>
+          <List>
+            {collections && collections.map((collection) => (
+              <ListItem key={collection.id} button component={Link} to={`/collection/${collection.id}`}>
+                <ListItemText primary={collection.name} />
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
+        <div className="buttons">
+          <Link to="/add-collection">
+            <Button variant="contained" style={{ backgroundColor: '#fff', color: '#000' }} startIcon={<AddIcon />}>Add Collection</Button>
+          </Link>
+        </div>
       </div>
     </div>
   );

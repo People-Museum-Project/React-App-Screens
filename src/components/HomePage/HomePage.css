@@ -2,18 +2,32 @@
   text-align: center;
 }
 
-.profile-user {
-  position: absolute;
-  top: 30px;
-  right: 60px;
+.content {
+  padding: 20px;
+}
+
+.section-title {
+  text-align: center;
+}
+
+.collection-title {
+  margin-top: 60px;
+  /* Increase this value to move it further down */
+  text-align: center;
+  font-size: 24px;
+  /* Adjust the size as needed */
 }
 
 .photo-wall {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px; /* 照片之间的间距 */
+  gap: 20px;
   margin-top: 20px;
+}
+
+.person-container {
+  text-align: center;
 }
 
 .photo {
@@ -25,16 +39,21 @@
 }
 
 .photo-wall img {
-  width: 150px; /* 照片的宽度 */
-  height: 150px; /* 照片的高度 */
-  object-fit: cover; /* 保持照片比例 */
-  border-radius: 10px; /* 圆角 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 阴影效果 */
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .photo-wall .add-photo {
   position: relative;
   cursor: pointer;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .photo-wall .add-photo::after {
@@ -43,11 +62,16 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 36px;
+  font-size: 12px;
+  /* Tiny font size */
   color: white;
   font-weight: bold;
 }
 
+.add-persona {
+  text-decoration: none;
+  color: inherit;
+}
 
 .buttons {
   margin-top: 20px;
@@ -55,36 +79,6 @@
 
 .buttons button {
   margin: 0 10px;
-  padding: 10px 20px;
-  font-size: 16px;
-}
-
-
-.profile-container {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.profile-info {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.profile-image {
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  margin-right: 10px; /* Space between image and text */
-}
-
-.profile-name {
-  font-size: 24px;
-  margin: 0; /* Remove default margin from h1 */
-}
-
-.login-button {
   padding: 10px 20px;
   font-size: 16px;
 }
