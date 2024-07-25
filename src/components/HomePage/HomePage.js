@@ -7,7 +7,7 @@ import { getPersonList } from '../../utils';
 import { useCollections } from '../../context/CollectionContext';
 import { auth } from '../Login/firebase';
 import SignInWithGoogle from "../Login/SignInWithGoogle";
-
+import Footer from './Footer'; // Import the Footer component
 
 const HomePage = () => {
   const [userImageLink, setUserImageLink] = useState('');
@@ -16,7 +16,6 @@ const HomePage = () => {
   const [totalRecords, setTotalRecords] = useState(0);
   const { collections, fetchCollections, clearCollections } = useCollections();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -32,10 +31,8 @@ const HomePage = () => {
       }
     });
 
-
     return () => unsubscribe();
   }, []);
-
 
   const fetchPeopleData = async (user) => {
     try {
@@ -51,11 +48,9 @@ const HomePage = () => {
     }
   };
 
-
   const handleLoadMore = () => {
     setVisibleImages(prevVisibleImages => prevVisibleImages + 6);
   };
-
 
   return (
     <div className="homepage">
@@ -77,7 +72,6 @@ const HomePage = () => {
           </Box>
         </Toolbar>
       </AppBar>
-
 
       <div className="content">
         <div className="header-with-button">
@@ -125,9 +119,9 @@ const HomePage = () => {
           </List>
         </Paper>
       </div>
+      <Footer /> {/* Add Footer component */}
     </div>
   );
-}
-
+};
 
 export default HomePage;

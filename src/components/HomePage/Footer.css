@@ -1,0 +1,25 @@
+/* Footer.css */
+.footer {
+    background: linear-gradient(45deg, #00796b, #00acc1, #00796b);
+    background-size: 200% 200%;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    /* Optional: Add a subtle shadow for depth */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: Add animation for a subtle moving effect */
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 0%;
+    }
+
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+.footer {
+    animation: gradientAnimation 10s ease infinite;
+}
