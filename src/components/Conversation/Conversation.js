@@ -53,11 +53,13 @@ const Conversation = () => {
     generateAnswer(question);
   };
 
-  const generateAnswer = (question) => {
-    async () => {
-      const response = await generateText((question, 'gpt-3.5-turbo'));
+  const generateAnswer = async (question) => {
+    try {
+      const response = await generateText(question, 'gpt-3.5-turbo');
+      setAnswer(response.data);
+    } catch (error) {
+      console.error('Error generating answer:', error);
     }
-    setAnswer(response.data)
   };
 
   return (
