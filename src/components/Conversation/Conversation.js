@@ -5,6 +5,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import EditIcon from '@mui/icons-material/Edit';
 import QuestionForm from './QuestionForm';
 import QuestionList from './QuestionList';
+import { generateText, generateSamplePrompts } from '../../utils';
 import Answer from './Answer';
 import './Conversation.css';
 import { getPerson, getCollectionListByPerson } from '../../utils'; // Import the functions
@@ -12,7 +13,7 @@ import { getPerson, getCollectionListByPerson } from '../../utils'; // Import th
 const Conversation = () => {
   const { personId } = useParams();
   const [person, setPerson] = useState(null);
-  const [questions] = useState([
+  const [questions, setQuestions] = useState([
     "How did you free yourself and others during the Civil War?",
     "Where did you sail the commandeered ship to in 1862?"
   ]);
@@ -36,6 +37,9 @@ const Conversation = () => {
         } else {
           console.error('Collections data not found');
         }
+
+        const response = await generateSamplePrompts("If you are me, what interesting questions would you ask to know better about the person: ${personData.person.name}.", 2, 50, "asst_ubKwp4KW8cDePhDv7Gf6adf9");
+        setQuestions(response.data)
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -50,13 +54,10 @@ const Conversation = () => {
   };
 
   const generateAnswer = (question) => {
-    if (question === "How did you free yourself and others during the Civil War?") {
-      setAnswer("I am Robert Smalls, and I am proud to share how I freed myself and others during the Civil War. On that daring night of May 13, 1862, I made a bold decision to seize control of the Confederate transport ship CSS Planter in Charleston harbor...");
-    } else if (question === "Where did you sail the commandeered ship to in 1862?") {
-      setAnswer("After commandeering the ship, I navigated the CSS Planter past Confederate forts and delivered it to the Union forces blockading Charleston Harbor...");
-    } else {
-      setAnswer("This is a placeholder answer for the question: " + question);
+    async () => {
+      const response = await generateText((question, 'gpt-3.5-turbo'));
     }
+    setAnswer(response.data)
   };
 
   return (

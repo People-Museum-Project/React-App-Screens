@@ -382,14 +382,14 @@ const deletePersonFromCollection = async (personId, collectionId) => {
 };
 
 // AI-related functions
-const generateText = async (prompt) => {
+const generateText = async (prompt, model) => {
   try {
     const response = await fetch(`${aiBaseurl}generateText`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ prompt })
+      body: JSON.stringify({"prompt": prompt, "model": model })
     });
     const data = await response.json();
     console.log('Status:', response.status);
@@ -418,13 +418,20 @@ const askQuestion = async (question) => {
   }
 };
 
-const generateSamplePrompts = async () => {
+const generateSamplePrompts = async (context, num_samples, max_words, assistant_id, followups) => {
   try {
     const response = await fetch(`${aiBaseurl}generateSamplePrompts`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      body: JSON.stringify({
+        "context": context,
+        "num_samples": num_samples,
+        "max_words": max_words,
+        "assistant_id": assistant_id,
+        "followups": followups
+      })
     });
     const data = await response.json();
     console.log('Status:', response.status);
