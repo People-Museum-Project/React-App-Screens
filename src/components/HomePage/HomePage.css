@@ -22,17 +22,20 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
+  gap: 10px; /* 调整间隙以确保每行能放下6个容器 */
   margin-top: 20px;
 }
 
 .person-container {
+  flex: 1 0 calc(16.66% - 10px); /* 100% / 6 = 16.66%, 减去gap */
+  max-width: 200px; /* 控制图片的最大宽度 */
+  margin: 5px; /* 控制图片之间的间隙 */
   text-align: center;
 }
 
 .photo {
-  width: 200px;
-  height: 200px;
+  width: 100%; /* 使用容器的宽度 */
+  height: auto; /* 自动调整高度 */
   object-fit: cover;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -68,11 +71,6 @@
   font-weight: bold;
 }
 
-.add-persona {
-  text-decoration: none;
-  color: inherit;
-}
-
 .buttons {
   margin-top: 20px;
 }
@@ -81,4 +79,31 @@
   margin: 0 10px;
   padding: 10px 20px;
   font-size: 16px;
+}
+
+.header-with-button {
+  position: relative;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.section-title.custom-title,
+.collection-title {
+  display: inline-block;
+  margin: 0 auto;
+}
+
+.add-persona,
+.add-collection  {
+  position: absolute;
+  right: 40;
+  top: 50%;
+  transform: translateY(-50%);
+  text-decoration: none;
+  color: inherit;
+}
+
+.add-persona .MuiIconButton-root,
+.add-collection .MuiIconButton-root {
+  font-size: 24px;
 }

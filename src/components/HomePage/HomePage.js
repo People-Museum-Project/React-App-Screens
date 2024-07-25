@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button, Paper, List, ListItem, ListItemText, Avatar, Pagination, IconButton, Menu, MenuItem } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Paper, List, ListItem, ListItemText, Avatar, IconButton, Menu, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AddIcon from '@mui/icons-material/Add';
 import './HomePage.css';
@@ -12,20 +12,19 @@ import SignInWithGoogle from "../Login/SignInWithGoogle";
 const HomePage = () => {
   const [userImageLink, setUserImageLink] = useState('');
   const [people, setPeople] = useState([]);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [visibleImages, setVisibleImages] = useState(6);
+  const [totalRecords, setTotalRecords] = useState(0);
   const { collections, fetchCollections } = useCollections();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const limit = 3; // Number of items per page
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setIsLoggedIn(true);
         setUserImageLink(user.photoURL);
-        fetchPeopleData(user, page, limit);
+        fetchPeopleData(user);
       } else {
         setIsLoggedIn(false);
         setUserImageLink('');
@@ -33,16 +32,15 @@ const HomePage = () => {
     });
 
     return () => unsubscribe();
-  }, [page]);
+  }, []);
 
-  const fetchPeopleData = async (user, page, limit) => {
+  const fetchPeopleData = async (user) => {
     try {
       if (user) {
-        const response = await getPersonList(user.uid, page, limit);
+        const response = await getPersonList(user.uid);
         if (response && response.data) {
           setPeople(response.data);
-          const totalRecords = 10; // Replace with actual total records
-          setTotalPages(Math.ceil(totalRecords / limit));
+          setTotalRecords(response.total || 10); // Replace with actual total records
         }
       }
     } catch (error) {
@@ -50,12 +48,8 @@ const HomePage = () => {
     }
   };
 
-  useEffect(() => {
-    fetchCollections();
-  }, [fetchCollections]);
-
-  const handlePageChange = (event, value) => {
-    setPage(value);
+  const handleLoadMore = () => {
+    setVisibleImages(prevVisibleImages => prevVisibleImages + 6);
   };
 
   const handleMenuClick = (event) => {
@@ -95,11 +89,18 @@ const HomePage = () => {
         </Toolbar>
       </AppBar>
       <div className="content">
-        <Typography variant="h5" className="section-title custom-title">
-          My Interest Network
-        </Typography>
+        <div className="header-with-button">
+          <Typography variant="h5" className="section-title custom-title">
+            My Interest Network
+          </Typography>
+          <Link to="/add-persona" className="add-persona">
+            <IconButton color="primary" aria-label="add new persona">
+              <AddIcon />
+            </IconButton>
+          </Link>
+        </div>
         <div className="photo-wall">
-          {people && people.map(person => (
+          {people.slice(0, visibleImages).map(person => (
             <div key={person.id} className="person-container">
               <Link to={`/conversation/${person.id}`}>
                 <img src={person.imageLink} alt={person.name} className="photo" />
@@ -107,19 +108,22 @@ const HomePage = () => {
               <p className="photo-name">{person.name}</p>
             </div>
           ))}
-          <div className="person-container">
-            <Link to="/add-persona" className="add-persona">
-              <div className="photo add-photo">
-                <AddIcon />
-              </div>
-            </Link>
-            <p className="photo-name">Add New Persona</p>
-          </div>
         </div>
-        <Pagination count={totalPages} page={page} onChange={handlePageChange} style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '30px' }} />
-        <Typography variant="h6" className="collection-title">
-          My Collection's
-        </Typography>
+        {visibleImages < totalRecords && (
+          <Button onClick={handleLoadMore} variant="contained" style={{ display: 'block', margin: '20px auto' }}>
+            Load More
+          </Button>
+        )}
+        <div className="header-with-button">
+          <Typography variant="h6" className="collection-title">
+            My Collections
+          </Typography>
+          <Link to="/add-collection" className="add-collection">
+            <IconButton color="primary" aria-label="add new collection">
+              <AddIcon />
+            </IconButton>
+          </Link>
+        </div>
         <Paper elevation={3} style={{ margin: '20px auto', padding: '20px', maxWidth: '600px' }}>
           <List>
             {collections && collections.map((collection) => (
@@ -129,11 +133,6 @@ const HomePage = () => {
             ))}
           </List>
         </Paper>
-        <div className="buttons">
-          <Link to="/add-collection">
-            <Button variant="contained" style={{ backgroundColor: '#fff', color: '#000' }} startIcon={<AddIcon />}>Add Collection</Button>
-          </Link>
-        </div>
       </div>
     </div>
   );
