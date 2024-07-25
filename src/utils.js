@@ -1,5 +1,7 @@
 //src/utils.js
 const baseurl = 'http://127.0.0.1:8080/db/';
+const aiBaseurl = 'http://127.0.0.1:8080/ai/';
+
 
 const addUser = async (name, imageLink, description, favourite, googleUserId, gmail) => {
   try {
@@ -379,6 +381,78 @@ const deletePersonFromCollection = async (personId, collectionId) => {
   }
 };
 
+// AI-related functions
+const generateText = async (prompt) => {
+  try {
+    const response = await fetch(`${aiBaseurl}generateText`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ prompt })
+    });
+    const data = await response.json();
+    console.log('Status:', response.status);
+    console.log('Data:', data);
+    return data;
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+};
+
+const askQuestion = async (question) => {
+  try {
+    const response = await fetch(`${aiBaseurl}askQuestion`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ question })
+    });
+    const data = await response.json();
+    console.log('Status:', response.status);
+    console.log('Data:', data);
+    return data;
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+};
+
+const generateSamplePrompts = async () => {
+  try {
+    const response = await fetch(`${aiBaseurl}generateSamplePrompts`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const data = await response.json();
+    console.log('Status:', response.status);
+    console.log('Data:', data);
+    return data;
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+};
+
+const generateFollowups = async (context) => {
+  try {
+    const response = await fetch(`${aiBaseurl}generateFollowups`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ context })
+    });
+    const data = await response.json();
+    console.log('Status:', response.status);
+    console.log('Data:', data);
+    return data;
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+};
+
 module.exports = {
   addUser,
   getUser,
@@ -396,5 +470,9 @@ module.exports = {
   getCollection,
   updateCollection,
   deleteCollection,
-  deletePersonFromCollection
+  deletePersonFromCollection,
+  generateText,
+  askQuestion,
+  generateSamplePrompts,
+  generateFollowups
 };
