@@ -20,7 +20,7 @@ function QuestionForm({ onAskQuestion }) {
                 type="text"
                 value={question}
                 onChange={handleChange}
-                placeholder="Ask Robert Smalls a question"
+                placeholder="Ask a question"
                 className="question-input"
             />
             <button type="submit" className="ask-button">Ask</button>

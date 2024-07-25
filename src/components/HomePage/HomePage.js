@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button, Paper, List, ListItem, ListItemText, Avatar, IconButton, Menu, MenuItem } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import { AppBar, Toolbar, Typography, Button, Paper, List, ListItem, ListItemText, Avatar, IconButton, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import './HomePage.css';
 import { getPersonList } from '../../utils';
 import { useCollections } from '../../context/CollectionContext';
 import { auth } from '../Login/firebase';
 import SignInWithGoogle from "../Login/SignInWithGoogle";
+
 
 const HomePage = () => {
   const [userImageLink, setUserImageLink] = useState('');
@@ -16,8 +16,7 @@ const HomePage = () => {
   const [totalRecords, setTotalRecords] = useState(0);
   const { collections, fetchCollections, clearCollections } = useCollections();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -33,8 +32,10 @@ const HomePage = () => {
       }
     });
 
+
     return () => unsubscribe();
   }, []);
+
 
   const fetchPeopleData = async (user) => {
     try {
@@ -50,47 +51,34 @@ const HomePage = () => {
     }
   };
 
+
   const handleLoadMore = () => {
     setVisibleImages(prevVisibleImages => prevVisibleImages + 6);
   };
 
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
 
   return (
     <div className="homepage">
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleMenuClick}>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className="title">
-            People Museum
-          </Typography>
-          <div style={{ flexGrow: 1 }}></div>
-          {isLoggedIn ? (
-            <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <Avatar src={userImageLink} alt="Profile" />
-            </Link>
-          ) : (
-            <SignInWithGoogle />
-          )}
-          <Menu
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleMenuClose}
-          >
-            <MenuItem component={Link} to="/" onClick={handleMenuClose}>My Stuff</MenuItem>
-            <MenuItem component={Link} to="/explore" onClick={handleMenuClose}>Explore</MenuItem>
-            <MenuItem component={Link} to="/about" onClick={handleMenuClose}>About</MenuItem>
-          </Menu>
+          <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+            <Button color="inherit" component={Link} to="/">People Museum</Button>
+            <Button color="inherit" component={Link} to="/explore">Explore</Button>
+            <Button color="inherit" component={Link} to="/about">About</Button>
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {isLoggedIn ? (
+              <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Avatar src={userImageLink} alt="Profile" />
+              </Link>
+            ) : (
+              <SignInWithGoogle />
+            )}
+          </Box>
         </Toolbar>
       </AppBar>
+
+
       <div className="content">
         <div className="header-with-button">
           <Typography variant="h5" className="section-title custom-title">
@@ -140,5 +128,6 @@ const HomePage = () => {
     </div>
   );
 }
+
 
 export default HomePage;
