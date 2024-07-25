@@ -1,4 +1,4 @@
-//src/context/CollectionContext.js
+// src/context/CollectionContext.js
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { getCollectionList } from '../utils';
 import { auth } from '../components/Login/firebase';
@@ -25,16 +25,21 @@ export const CollectionProvider = ({ children }) => {
         }
       } else {
         console.log('user is null');
+        clearCollections(); // Clear collections when user logs out
       }
     });
   }, []);
+
+  const clearCollections = () => {
+    setCollections([]); // Clear the collections array
+  };
 
   useEffect(() => {
     fetchCollections();
   }, [fetchCollections]);
 
   return (
-    <CollectionContext.Provider value={{ collections, fetchCollections }}>
+    <CollectionContext.Provider value={{ collections, fetchCollections, clearCollections }}>
       {children}
     </CollectionContext.Provider>
   );

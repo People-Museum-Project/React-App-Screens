@@ -14,7 +14,7 @@ const HomePage = () => {
   const [people, setPeople] = useState([]);
   const [visibleImages, setVisibleImages] = useState(6);
   const [totalRecords, setTotalRecords] = useState(0);
-  const { collections, fetchCollections } = useCollections();
+  const { collections, fetchCollections, clearCollections } = useCollections();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -25,9 +25,11 @@ const HomePage = () => {
         setIsLoggedIn(true);
         setUserImageLink(user.photoURL);
         fetchPeopleData(user);
+        fetchCollections(); // Fetch collections when user is logged in
       } else {
         setIsLoggedIn(false);
         setUserImageLink('');
+        clearCollections(); // Clear collections when user logs out
       }
     });
 
@@ -67,9 +69,10 @@ const HomePage = () => {
           <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleMenuClick}>
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" style={{ flexGrow: 1 }}>
+          <Typography variant="h6" className="title">
             People Museum
           </Typography>
+          <div style={{ flexGrow: 1 }}></div>
           {isLoggedIn ? (
             <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
               <Avatar src={userImageLink} alt="Profile" />
