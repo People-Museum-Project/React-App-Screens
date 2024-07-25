@@ -37,9 +37,6 @@ const Conversation = () => {
         } else {
           console.error('Collections data not found');
         }
-
-        const response = await generateSamplePrompts("If you are me, what interesting questions would you ask to know better about the person: ${personData.person.name}.", 2, 50, "asst_ubKwp4KW8cDePhDv7Gf6adf9");
-        setQuestions(response.data)
       } catch (error) {
         console.error('Error fetching data:', error);
       }
