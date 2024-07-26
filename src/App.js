@@ -2,6 +2,9 @@
 import React from 'react';
 import {ThemeProvider, createTheme, CssBaseline} from '@mui/material';
 import HomePage from './components/HomePage/HomePage';
+import PrivacyPolicy from './components/HomePage/Privacy';
+import TermsOfService from './components/HomePage/Terms';
+import ContactUs from './components/HomePage/Contact';
 import AddPersona from './components/AddPersona/AddPersona';
 import UpdatePerson from './components/AddPersona/UpdatePerson';
 import AddCollection from './components/AddCollection/AddCollection';
@@ -40,6 +43,9 @@ const App = () => {
         <Router>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/contact" element={<ContactUs />} />
             <Route path="/add-persona" element={<AddPersona />} />
             <Route path="/update-person/:personId" element={<UpdatePerson />} />
             <Route path="/update-collection/:collectionId" element={<UpdateCollection />} />

@@ -11,9 +11,9 @@ const Footer = () => {
                 &copy; {new Date().getFullYear()} All Rights Reserved. | Designed with ...
             </Typography>
             <Box sx={{ marginTop: '10px' }}>
-                <Link href="#" color="inherit" sx={{ margin: '0 10px' }}>Privacy Policy</Link>
-                <Link href="#" color="inherit" sx={{ margin: '0 10px' }}>Terms of Service</Link>
-                <Link href="#" color="inherit" sx={{ margin: '0 10px' }}>Contact Us</Link>
+                <Link href="/privacy" color="inherit" sx={{ margin: '0 10px' }}>Privacy Policy</Link>
+                <Link href="/terms" color="inherit" sx={{ margin: '0 10px' }}>Terms of Service</Link>
+                <Link href="/contact" color="inherit" sx={{ margin: '0 10px' }}>Contact Us</Link>
             </Box>
         </Box>
     );
