@@ -83,6 +83,12 @@
 
 .header-with-button {
   position: relative;
+  text-align: l;
+  margin-bottom: 20px;
+}
+
+.header {
+  position: relative;
   text-align: center;
   margin-bottom: 20px;
 }

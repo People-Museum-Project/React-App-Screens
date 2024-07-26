@@ -74,9 +74,14 @@ const HomePage = () => {
       </AppBar>
 
       <div className="content">
-        <div className="header-with-button">
+        <div className="header">
           <Typography variant="h5" className="section-title custom-title">
             My Interest Network
+          </Typography>
+        </div>
+        <div className="header-with-button">
+          <Typography variant="h6" className="section-title custom-title">
+            My People
           </Typography>
           <Link to="/add-persona" className="add-persona">
             <IconButton color="primary" aria-label="add new persona">
