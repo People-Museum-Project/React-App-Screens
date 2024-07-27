@@ -115,7 +115,7 @@ const HomePage = () => {
           <Typography variant="h6" className="section-title">
             People
           </Typography>
-          <Link to="/add-person" className="add-person">
+          <Link to="/add-persona" className="add-person">
             <IconButton color="primary" aria-label="add new person">
               <AddIcon />
             </IconButton>
