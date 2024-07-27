@@ -1,7 +1,8 @@
-//src/App.js
-import React from 'react';
-import {ThemeProvider, createTheme, CssBaseline} from '@mui/material';
+// src/App.js
+import React, { useEffect, useState } from 'react';
+import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import HomePage from './components/HomePage/HomePage';
+import ExplorePage from './components/ExplorePage/ExplorePage';
 import PrivacyPolicy from './components/HomePage/Privacy';
 import TermsOfService from './components/HomePage/Terms';
 import ContactUs from './components/HomePage/Contact';
@@ -14,35 +15,43 @@ import UpdatePersonCollection from './components/AddPersonToCollection/UpdatePer
 import CollectionPage from './components/CollectionPage/CollectionPage';
 import Conversation from './components/Conversation/Conversation';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { CollectionProvider } from './context/CollectionContext';
 import Profile from './components/Login/profile';
-import "./App.css"
+import { auth } from './components/Login/firebase';
+import './App.css';
 
 const theme = createTheme({
   palette: {
-    mode: 'dark', // Assuming you want a dark theme as previously mentioned
+    mode: 'dark',
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
     h1: {
       fontSize: '2.2rem',
-      fontWeight: 500, // Medium font weight
+      fontWeight: 500,
     },
     body1: {
       fontSize: '1rem',
-      fontWeight: 400, // Normal font weight
+      fontWeight: 400,
     }
   }
 });
 
 const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setIsLoggedIn(!!user);
+    });
+    return () => unsubscribe();
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <CollectionProvider>
         <Router>
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={isLoggedIn ? <HomePage /> : <ExplorePage />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="/contact" element={<ContactUs />} />
@@ -54,10 +63,10 @@ const App = () => {
             <Route path="/collection/:id" element={<CollectionPage />} />
             <Route path="/conversation/:personId" element={<Conversation />} />
             <Route path="/add-person-collection/:collectionId" element={<AddPersonToCollection />} />
+            <Route path="/explore" element={<ExplorePage />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </Router>
-      </CollectionProvider>
     </ThemeProvider>
   );
 }

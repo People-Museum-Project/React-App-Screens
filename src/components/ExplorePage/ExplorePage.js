@@ -1,14 +1,16 @@
+// src/pages/ExplorePage.js
+
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, Paper, List, ListItem, ListItemText, Avatar, IconButton, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import './HomePage.css';
+import '../HomePage/HomePage.css';
 import { getPersonList, getCollectionList } from '../../utils';
 import { auth } from '../Login/firebase';
 import SignInWithGoogle from "../Login/SignInWithGoogle";
-import Footer from './Footer'; // Import the Footer component
+import Footer from '../HomePage/Footer'; // Import the Footer component
 
-const HomePage = () => {
+const ExplorePage = () => {
   const [userImageLink, setUserImageLink] = useState('');
   const [people, setPeople] = useState([]);
   const [visibleImages, setVisibleImages] = useState(6);
@@ -64,13 +66,13 @@ const HomePage = () => {
       if (user) {
         setIsLoggedIn(true);
         setUserImageLink(user.photoURL);
-        fetchPeopleData(user.uid);
-        fetchCollections(user.uid);
+        fetchPeopleData("EXPLORE");
+        fetchCollections("EXPLORE");
       } else {
         setIsLoggedIn(false);
         setUserImageLink(null);
-        fetchPeopleData(null);
-        fetchCollections(null);
+        fetchPeopleData("EXPLORE");
+        fetchCollections("EXPLORE");
       }
     });
 
@@ -80,7 +82,7 @@ const HomePage = () => {
   const handleLoadMore = () => {
     setVisibleImages(prevVisibleImages => prevVisibleImages + 6);
     const nextPage = Math.ceil(people.length / 6) + 1;
-    fetchPeopleData(uid, nextPage);
+    fetchPeopleData("EXPLORE", nextPage);
   };
 
   return (
@@ -106,21 +108,18 @@ const HomePage = () => {
         </Toolbar>
       </AppBar>
 
+
       <div className="content">
         <Typography variant="h5" className="centered-title">
-          Interest Network
+          Explore Interest Network
         </Typography>
 
         <div className="header-with-button">
           <Typography variant="h6" className="section-title">
             People
           </Typography>
-          <Link to="/add-person" className="add-person">
-            <IconButton color="primary" aria-label="add new person">
-              <AddIcon />
-            </IconButton>
-          </Link>
         </div>
+
         <div className="photo-wall">
           {people.slice(0, visibleImages).map(person => (
             <div key={person.id} className="person-container">
@@ -141,11 +140,6 @@ const HomePage = () => {
           <Typography variant="h6" className="collection-title">
             Collections
           </Typography>
-          <Link to="/add-collection" className="add-collection">
-            <IconButton color="primary" aria-label="add new collection">
-              <AddIcon />
-            </IconButton>
-          </Link>
         </div>
 
         <Paper elevation={3} style={{ margin: '20px auto', padding: '20px', maxWidth: '600px' }}>
@@ -163,4 +157,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default ExplorePage;

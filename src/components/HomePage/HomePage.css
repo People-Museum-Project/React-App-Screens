@@ -6,39 +6,30 @@
   padding: 20px;
 }
 
-.section-title {
-  text-align: center;
+.photo {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.collection-title {
-  margin-top: 60px;
-  /* Increase this value to move it further down */
+.person-container {
+  width: calc(100% / 6 - 10px); /* This ensures 6 items per row with space between */
+  max-width: none; /* Remove the previous max-width restriction */
+  margin: 5px 0; /* Add vertical margin between rows */
   text-align: center;
-  font-size: 24px;
-  /* Adjust the size as needed */
 }
 
 .photo-wall {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px; /* 调整间隙以确保每行能放下6个容器 */
+  gap: 10px;
   margin-top: 20px;
-}
-
-.person-container {
-  flex: 1 0 calc(16.66% - 10px); /* 100% / 6 = 16.66%, 减去gap */
-  max-width: 200px; /* 控制图片的最大宽度 */
-  margin: 5px; /* 控制图片之间的间隙 */
-  text-align: center;
-}
-
-.photo {
-  width: 100%; /* 使用容器的宽度 */
-  height: auto; /* 自动调整高度 */
-  object-fit: cover;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding-left: 0px; /* Adjust this value to set distance from the left */
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .photo-wall img {
@@ -71,6 +62,13 @@
   font-weight: bold;
 }
 
+.section-title,
+.collection-title {
+  margin: 0;
+  padding-left: 20 px; /* Adjust this value to move titles to the right */
+  text-align: left;
+}
+
 .buttons {
   margin-top: 20px;
 }
@@ -82,38 +80,45 @@
 }
 
 .header-with-button {
-  position: relative;
-  text-align: l;
+  display: flex;
+  align-items: center;
   margin-bottom: 20px;
 }
 
-.header {
-  position: relative;
-  text-align: center;
-  margin-bottom: 20px;
+.header-with-button .section-title,
+.header-with-button .collection-title {
+  margin: 0;
+  text-align: left; /* Aligns the titles to the left */
 }
 
-.section-title.custom-title,
-.collection-title {
-  display: inline-block;
-  margin: 0 auto;
+.header-with-button .add-person,
+.header-with-button .add-collection {
+  margin-left: 0 px; /* Consistent spacing for add buttons */
 }
 
-.add-persona,
-.add-collection  {
-  position: absolute;
-  right: 40;
-  top: 50%;
-  transform: translateY(-50%);
-  text-decoration: none;
-  color: inherit;
+.centered-title {
+  text-align: center; /* Centers the title */
+  margin-top: 20px;
 }
 
-.add-persona .MuiIconButton-root,
-.add-collection .MuiIconButton-root {
-  font-size: 24px;
+.collection-list {
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 600px;
+  text-align: left; /* Aligns list items to the left */
 }
 
+.google-signin-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 20px;
+  width: 150px; /* or any other width */
+}
 
-
-
+.google-signin-button img {
+  width: 100%; /* Make the image fit the container */
+  max-width: 100%;
+  height: auto;
+}

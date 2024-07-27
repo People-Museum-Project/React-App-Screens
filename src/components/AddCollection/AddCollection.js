@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, TextField, Button, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // Import ArrowBack icon
-import { useCollections } from '../../context/CollectionContext';
-import { addCollection } from '../../utils';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { addCollection, getCollectionList } from '../../utils';
 import { auth } from '../Login/firebase';
 
 const theme = createTheme({
@@ -48,7 +47,7 @@ const theme = createTheme({
 
 const CollectionForm = ({ onSubmit, navigate }) => { // Add navigate as a prop
   const [formData, setFormData] = useState({
-    userId: auth.currentUser.uid, // Example user ID
+    userId: auth.currentUser ? auth.currentUser.uid : '',
     collectionName: '',
     description: '',
     imageLink: '',
@@ -82,7 +81,7 @@ const CollectionForm = ({ onSubmit, navigate }) => { // Add navigate as a prop
     e.preventDefault();
     onSubmit(formData, () => {
       setFormData({
-        userId: '1', // Example user ID
+        userId: auth.currentUser ? auth.currentUser.uid : '',
         collectionName: '',
         description: '',
         imageLink: '',
@@ -103,13 +102,12 @@ const CollectionForm = ({ onSubmit, navigate }) => { // Add navigate as a prop
         justifyContent: 'center',
         minHeight: '100vh',
         p: 2,
-        position: 'relative', // Ensure positioning context for back button
+        position: 'relative',
       }}
     >
-      {/* Back button */}
       <Button
         startIcon={<ArrowBackIcon />}
-        onClick={() => navigate(-1)} // Use the navigate prop
+        onClick={() => navigate(-1)}
         sx={{
           position: 'absolute',
           top: 16,
@@ -194,14 +192,30 @@ const CollectionForm = ({ onSubmit, navigate }) => { // Add navigate as a prop
 
 const AddCollection = () => {
   const navigate = useNavigate();
-  const { fetchCollections } = useCollections();
+  const [collections, setCollections] = useState([]);
+
+  const fetchCollections = useCallback(async () => {
+    try {
+      const response = await getCollectionList(auth.currentUser ? auth.currentUser.uid : '');
+      if (response && response.data) {
+        setCollections(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching collections:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCollections();
+  }, [fetchCollections]);
 
   const handleCollectionSubmit = async (formData, resetForm) => {
     try {
       const response = await addCollection(formData);
       console.log('Collection added successfully:', response);
-      await fetchCollections(); // Refresh collections data
-      navigate('/'); // Navigate to the home page on success
+      await fetchCollections();
+      resetForm();
+      navigate('/'); 
     } catch (error) {
       console.error('Error adding collection:', error);
     }
@@ -217,7 +231,7 @@ const AddCollection = () => {
           alignItems: 'center',
         }}
       >
-        <CollectionForm onSubmit={handleCollectionSubmit} navigate={navigate} /> {/* Pass navigate as a prop */}
+        <CollectionForm onSubmit={handleCollectionSubmit} navigate={navigate} />
       </Box>
     </ThemeProvider>
   );
