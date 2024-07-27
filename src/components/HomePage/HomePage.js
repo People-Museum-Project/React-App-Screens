@@ -27,21 +27,6 @@ const HomePage = () => {
       } catch (error) {
         console.error('Error fetching collections:', error);
       }
-    } else {
-      auth.onAuthStateChanged(async (user) => {
-        if (user) {
-          try {
-            const response = await getCollectionList(user.uid);
-            if (response && response.data) {
-              setCollections(response.data);
-            }
-          } catch (error) {
-            console.error('Error fetching collections:', error);
-          }
-        } else {
-          console.log('User is null');
-        }
-      });
     }
   }, []);
 
@@ -64,18 +49,23 @@ const HomePage = () => {
       if (user) {
         setIsLoggedIn(true);
         setUserImageLink(user.photoURL);
-        fetchPeopleData(user.uid);
-        fetchCollections(user.uid);
+        setUid(user.uid);
       } else {
         setIsLoggedIn(false);
         setUserImageLink(null);
-        fetchPeopleData(null);
-        fetchCollections(null);
+        setUid(null);
       }
     });
 
     return () => unsubscribe();
-  }, [fetchPeopleData, fetchCollections]);
+  }, []);
+
+  useEffect(() => {
+    if (uid) {
+      fetchPeopleData(uid);
+      fetchCollections(uid);
+    }
+  }, [uid, fetchPeopleData, fetchCollections]);
 
   const handleLoadMore = () => {
     setVisibleImages(prevVisibleImages => prevVisibleImages + 6);
