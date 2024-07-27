@@ -364,13 +364,15 @@ const deleteCollection = async (collectionId) => {
 };
 
 const deletePersonFromCollection = async (personId, collectionId) => {
+  const intPersonId = parseInt(personId, 10);
+  const intCollectionId = parseInt(collectionId, 10);
   try {
     const response = await fetch(`${baseurl}deletePersonFromCollection`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ personId: personId, collectionId: collectionId })
+      body: JSON.stringify({ personId: intPersonId, collectionId: intCollectionId })
     });
     const data = await response.json();
     console.log('Status:', response.status);
