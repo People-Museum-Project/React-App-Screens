@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -108,23 +108,9 @@ const PersonForm = ({ onSubmit, navigate }) => {
         justifyContent: 'center',
         minHeight: '100vh',
         p: 2,
-        position: 'relative',
+        pt: 10, // Add padding to the top to prevent overlap
       }}
     >
-      {/* Back button */}
-      <Button
-        startIcon={<ArrowBackIcon />}
-        onClick={() => navigate(-1)}
-        sx={{
-          position: 'absolute',
-          top: 16,
-          left: 16,
-          color: 'white',
-        }}
-      >
-        Back
-      </Button>
-
       <Typography variant="h4" gutterBottom color="white">
         Add Person to Museum
       </Typography>
@@ -209,6 +195,22 @@ const PersonForm = ({ onSubmit, navigate }) => {
 
 const AddPersona = () => {
   const navigate = useNavigate();
+  const [showBackButton, setShowBackButton] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setShowBackButton(false);
+      } else {
+        setShowBackButton(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const handlePersonSubmit = async (formData, resetForm) => {
     const formDataToSend = {
@@ -239,8 +241,24 @@ const AddPersona = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          position: 'relative',
         }}
       >
+        {showBackButton && (
+          <Button
+            startIcon={<ArrowBackIcon />}
+            onClick={() => navigate(-1)}
+            sx={{
+              position: 'fixed',
+              top: 16,
+              left: 557,
+              color: 'white',
+              zIndex: 1000,
+            }}
+          >
+            Back
+          </Button>
+        )}
         <PersonForm onSubmit={handlePersonSubmit} navigate={navigate} />
       </Box>
     </ThemeProvider>

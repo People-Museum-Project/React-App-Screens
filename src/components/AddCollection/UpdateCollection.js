@@ -177,6 +177,22 @@ const UpdateCollection = () => {
         }));
     };
 
+    useEffect(() => {
+        const handleScroll = () => {
+            const backButton = document.getElementById('back-button');
+            if (window.scrollY > 50) {
+                backButton.style.display = 'none';
+            } else {
+                backButton.style.display = 'flex';
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
     return (
         <ThemeProvider theme={theme}>
             <Box
@@ -189,19 +205,21 @@ const UpdateCollection = () => {
                     justifyContent: 'center',
                     minHeight: '100vh',
                     p: 2,
+                    pt: 10, // Add padding top to ensure space for the back button
                     position: 'relative', // Ensure positioning context for back button
                 }}
             >
                 {/* Back button */}
                 <Button
+                    id="back-button"
                     startIcon={<ArrowBackIcon />}
                     onClick={() => navigate(-1)}
                     sx={{
-                        position: 'absolute',
+                        position: 'fixed',
                         top: 16,
-                        left: '42%',
-                        transform: 'translateX(-50%)', // Center horizontally
+                        left: 588,
                         color: 'white',
+                        zIndex: 1000, // Ensure the back button is above other elements
                     }}
                 >
                     Back

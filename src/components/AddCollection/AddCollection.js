@@ -45,7 +45,7 @@ const theme = createTheme({
   },
 });
 
-const CollectionForm = ({ onSubmit, navigate }) => { // Add navigate as a prop
+const CollectionForm = ({ onSubmit, navigate }) => {
   const [formData, setFormData] = useState({
     userId: auth.currentUser ? auth.currentUser.uid : '',
     collectionName: '',
@@ -102,22 +102,9 @@ const CollectionForm = ({ onSubmit, navigate }) => { // Add navigate as a prop
         justifyContent: 'center',
         minHeight: '100vh',
         p: 2,
-        position: 'relative',
+        pt: 10, // Add padding to the top to prevent overlap
       }}
     >
-      <Button
-        startIcon={<ArrowBackIcon />}
-        onClick={() => navigate(-1)}
-        sx={{
-          position: 'absolute',
-          top: 16,
-          left: 16,
-          color: 'white',
-        }}
-      >
-        Back
-      </Button>
-
       <Typography variant="h4" gutterBottom color="white">
         Add Collection to Museum
       </Typography>
@@ -193,6 +180,7 @@ const CollectionForm = ({ onSubmit, navigate }) => { // Add navigate as a prop
 const AddCollection = () => {
   const navigate = useNavigate();
   const [collections, setCollections] = useState([]);
+  const [showBackButton, setShowBackButton] = useState(true);
 
   const fetchCollections = useCallback(async () => {
     try {
@@ -209,13 +197,28 @@ const AddCollection = () => {
     fetchCollections();
   }, [fetchCollections]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setShowBackButton(false);
+      } else {
+        setShowBackButton(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   const handleCollectionSubmit = async (formData, resetForm) => {
     try {
       const response = await addCollection(formData);
       console.log('Collection added successfully:', response);
       await fetchCollections();
       resetForm();
-      navigate('/'); 
+      navigate('/');
     } catch (error) {
       console.error('Error adding collection:', error);
     }
@@ -229,8 +232,24 @@ const AddCollection = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          position: 'relative',
         }}
       >
+        {showBackButton && (
+          <Button
+            startIcon={<ArrowBackIcon />}
+            onClick={() => navigate(-1)}
+            sx={{
+              position: 'fixed',
+              top: 16,
+              left: 537,
+              color: 'white',
+              zIndex: 1000,
+            }}
+          >
+            Back
+          </Button>
+        )}
         <CollectionForm onSubmit={handleCollectionSubmit} navigate={navigate} />
       </Box>
     </ThemeProvider>
