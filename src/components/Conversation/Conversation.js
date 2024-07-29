@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Container, Box, Typography, IconButton } from '@mui/material';
@@ -50,11 +51,7 @@ const Conversation = () => {
     if (person && person.assistantId) {
       try {
         const response = await askQuestion("Generate 2 possible questions people might want to ask you based on current context. \n" +
-<<<<<<< HEAD
           "Return the questions in a JavaScript array format without any special characters on the left and right ends, like this: [\"Question 1\", \"Question 2\"]. \n Always return new questions, no previous duplicate questions.", person.assistantId);
-=======
-            "Return the questions in a JavaScript array format without any special characters on the left and right ends, like this: [\"Question 1\", \"Question 2\"]. \n Always return new questions, no previous duplicate questions.", person.assistantId);
->>>>>>> e74556dc4fea50d93b06df435e4aa03e3e757827
         const questions = response.data.reply.slice(1, -1).split(",");
         setQuestions([questions[0], questions[1]]);
       } catch (error) {
@@ -62,25 +59,6 @@ const Conversation = () => {
       }
     }
   }
-
-  useEffect(() => {
-    const opening = async () => {
-      if (person && person.assistantId && person.name) {
-        try {
-          const response = await askQuestion(`Generate an opening for this new conversation, greet user ${person.name} in your own way based on your instruction`, person.assistantId);
-          const greetings = response.data.reply;
-          setAnswer(greetings);
-        } catch (error) {
-          console.error('Error generating questions:', error);
-        }
-      }
-    }
-
-    if (person && person.assistantId && !answer) {
-      opening();
-      initializeQuestions();
-    }
-  }, [person]);
 
   useEffect(() => {
     const generateAnswer = async (question) => {
@@ -93,19 +71,15 @@ const Conversation = () => {
       } catch (error) {
         console.error('Error generating answer:', error);
       }
-    }
+    };
 
-<<<<<<< HEAD
     generateAnswer(selectedQuestion);
     initializeQuestions();
   }, [selectedQuestion]);
-=======
-    if (selectedQuestion) {
-      generateAnswer(selectedQuestion);
-      initializeQuestions();
-    }
-  }, [selectedQuestion])
->>>>>>> e74556dc4fea50d93b06df435e4aa03e3e757827
+
+  useEffect(() => {
+    initializeQuestions();
+  }, [person]);
 
   return (
     <Container maxWidth="md">
