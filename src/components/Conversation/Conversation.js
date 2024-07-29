@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Container, Box, Typography, IconButton, List, ListItem, ListItemText } from '@mui/material';
+import { Container, Box, Typography, IconButton, CircularProgress } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import EditIcon from '@mui/icons-material/Edit';
 import QuestionForm from './QuestionForm';
@@ -8,16 +8,17 @@ import QuestionList from './QuestionList';
 import { generateText, generateSamplePrompts, askQuestion } from '../../utils';
 import Answer from './Answer';
 import './Conversation.css';
-import { getPerson, getCollectionListByPerson } from '../../utils'; // Import the functions
+import { getPerson, getCollectionListByPerson } from '../../utils';
 
 const Conversation = () => {
   const { personId } = useParams();
-  const navigate = useNavigate(); // Define the navigate function
+  const navigate = useNavigate();
   const [person, setPerson] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState("");
   const [answer, setAnswer] = useState('');
-  const [collections, setCollections] = useState([]); // State for collections
+  const [collections, setCollections] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,7 +32,7 @@ const Conversation = () => {
 
         const collectionData = await getCollectionListByPerson(personId);
         if (collectionData && collectionData.data) {
-          setCollections(collectionData.data); // Extract collections from data
+          setCollections(collectionData.data);
         } else {
           console.error('Collections data not found');
         }
@@ -49,6 +50,7 @@ const Conversation = () => {
 
   const initializeQuestions = async () => {
     if (person && person.assistantId) {
+      setLoading(true);
       try {
         const response = await askQuestion(
           "Generate 2 possible questions people might want to ask you based on current context. \n" +
@@ -59,6 +61,8 @@ const Conversation = () => {
         setQuestions([questions[0], questions[1]]);
       } catch (error) {
         console.error('Error generating questions:', error);
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -74,11 +78,14 @@ const Conversation = () => {
       if (!question || !person.assistantId) {
         return;
       }
+      setLoading(true);
       try {
         const response = await askQuestion(question, person.assistantId);
         setAnswer(response.data.reply);
       } catch (error) {
         console.error('Error generating answer:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -95,7 +102,7 @@ const Conversation = () => {
           <Box component="header" sx={{ textAlign: 'center', mb: 3, position: 'relative' }}>
             <IconButton
               component={Link}
-              onClick={() => navigate(-1)} // Use navigate to go back
+              onClick={() => navigate(-1)}
               color="primary"
               sx={{ position: 'absolute', top: 16, left: 16 }}
             >
@@ -105,7 +112,7 @@ const Conversation = () => {
             <Box sx={{ mt: 4, display: 'flex', alignItems: 'center' }}>
               <Typography variant="h6" gutterBottom>
                 In Collections:
-              </Typography>c
+              </Typography>
               {collections.length > 0 ? (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', ml: 1 }}>
                   {collections.map((collection) => (
@@ -115,7 +122,7 @@ const Conversation = () => {
                   ))}
                 </Box>
               ) : (
-                <Typography sx={{ ml: 1 }}>Not in any</Typography>
+                <Typography variant="h7" gutterBottom sx={{ ml: 1 }}>Not in any</Typography>
               )}
             </Box>
             <Typography variant="h4" component="h2" sx={{ mt: 4, mb: 2 }}>
@@ -134,9 +141,17 @@ const Conversation = () => {
               <EditIcon />
             </IconButton>
           </Box>
-          <QuestionList questions={questions} onSelectQuestion={handleAskQuestion} />
-          <QuestionForm onAskQuestion={handleAskQuestion} />
-          <Answer answer={answer} />
+          {loading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            <>
+              <QuestionList questions={questions} onSelectQuestion={handleAskQuestion} />
+              <QuestionForm onAskQuestion={handleAskQuestion} />
+              {selectedQuestion && <Answer answer={answer} />}
+            </>
+          )}
         </>
       ) : (
         <Typography variant="h6" sx={{ textAlign: 'center', mt: 4 }}>
