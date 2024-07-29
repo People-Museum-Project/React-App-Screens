@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Container, Box, Typography, IconButton, List, ListItem, ListItemText } from '@mui/material';
+import { Container, Box, Typography, IconButton } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import EditIcon from '@mui/icons-material/Edit';
 import QuestionForm from './QuestionForm';
 import QuestionList from './QuestionList';
-import {generateText, generateSamplePrompts, askQuestion} from '../../utils';
+import { askQuestion } from '../../utils';
 import Answer from './Answer';
 import './Conversation.css';
 import { getPerson, getCollectionListByPerson } from '../../utils'; // Import the functions
@@ -13,7 +13,6 @@ import { getPerson, getCollectionListByPerson } from '../../utils'; // Import th
 const Conversation = () => {
   const { personId } = useParams();
   const [person, setPerson] = useState(null);
-  // const [questions, setQuestions] = useState([`${person.name} is thinking...`, `${person.name} is thinking...`]);
   const [questions, setQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState("");
   const [answer, setAnswer] = useState('');
@@ -48,11 +47,10 @@ const Conversation = () => {
   };
 
   const initializeQuestions = async () => {
-    if (person && person.assistantId){
+    if (person && person.assistantId) {
       try {
         const response = await askQuestion("Generate 2 possible questions people might want to ask you based on current context. \n" +
-            "Return the questions in a JavaScript array format without any special characters on the left and right ends, like this: [\"Question 1\", \"Question 2\"]. \n Always return new questions, no previous duplicate questions.", person.assistantId);
-        // const questions = response.data.reply.replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '').split('\n')
+          "Return the questions in a JavaScript array format without any special characters on the left and right ends, like this: [\"Question 1\", \"Question 2\"]. \n Always return new questions, no previous duplicate questions.", person.assistantId);
         const questions = response.data.reply.slice(1, -1).split(",");
         setQuestions([questions[0], questions[1]]);
       } catch (error) {
@@ -76,7 +74,7 @@ const Conversation = () => {
 
     generateAnswer(selectedQuestion);
     initializeQuestions();
-  }, [selectedQuestion])
+  }, [selectedQuestion]);
 
   useEffect(() => {
     initializeQuestions();
@@ -96,6 +94,22 @@ const Conversation = () => {
               <HomeIcon />
             </IconButton>
             <img src={person.imageLink} alt={person.name} style={{ maxWidth: 300, height: 'auto', borderRadius: 8 }} />
+            <Box sx={{ mt: 4, display: 'flex', alignItems: 'center' }}>
+              <Typography variant="h6" gutterBottom>
+                In Collections:
+              </Typography>
+              {collections.length > 0 ? (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', ml: 1 }}>
+                  {collections.map((collection) => (
+                    <Typography key={collection.id} sx={{ mr: 2 }}>
+                      {collection.name}
+                    </Typography>
+                  ))}
+                </Box>
+              ) : (
+                <Typography sx={{ ml: 1 }}>Not in any</Typography>
+              )}
+            </Box>
             <Typography variant="h4" component="h2" sx={{ mt: 4, mb: 2 }}>
               Ask {person.name} a Question
             </Typography>
@@ -114,27 +128,13 @@ const Conversation = () => {
           </Box>
           {
             questions
-                ? <QuestionList questions={questions} onSelectQuestion={handleAskQuestion} />
-                : person && person.name
-                    ? <QuestionList questions={[`${person.name} is thinking...`, `${person.name} is thinking...`]}/>
-                    : <QuestionList questions={["Loading...", "Loading..."]}/>
+              ? <QuestionList questions={questions} onSelectQuestion={handleAskQuestion} />
+              : person && person.name
+                ? <QuestionList questions={[`${person.name} is thinking...`, `${person.name} is thinking...`]} />
+                : <QuestionList questions={["Loading...", "Loading..."]} />
           }
           <QuestionForm onAskQuestion={handleAskQuestion} />
           {<Answer answer={answer} />}
-          <Box sx={{ mt: 4 }}>
-            <Typography variant="h6" gutterBottom>
-              In Collections:
-            </Typography>
-            <List>
-              {collections.map((collection) => (
-                <ListItem key={collection.id}>
-                  <ListItemText
-                    primary={collection.name}
-                  />
-                </ListItem>
-              ))}
-            </List>
-          </Box>
         </>
       ) : (
         <Typography variant="h6" sx={{ textAlign: 'center', mt: 4 }}>
