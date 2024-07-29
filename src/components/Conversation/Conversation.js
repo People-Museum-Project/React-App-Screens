@@ -61,23 +61,28 @@ const Conversation = () => {
   }
 
   useEffect(() => {
-    const opening = async () => {
-      if (person && person.assistantId && person.name) {
-        try {
-          const response = await askQuestion(`Generate an opening for this new conversation, greet user ${person.name} in your own way based on your instruction`, person.assistantId);
-          const greetings = response.data.reply;
-          setAnswer(greetings);
-        } catch (error) {
-          console.error('Error generating questions:', error);
-        }
-      }
-    }
-
-    if (person && person.assistantId && !answer) {
-      opening();
+    if (person && person.assistantId && questions.length === 0) {
       initializeQuestions();
     }
-  }, [person]);
+  }, [person, questions]);
+
+  // useEffect(() => {
+  //   const opening = async () => {
+  //     if (person && person.assistantId && person.name) {
+  //       try {
+  //         const response = await askQuestion(`Generate an opening for this new conversation, greet user by calling his name "${person.name}" in your own way based on your instruction`, person.assistantId);
+  //         const greetings = response.data.reply;
+  //         setAnswer(greetings);
+  //       } catch (error) {
+  //         console.error('Error generating questions:', error);
+  //       }
+  //     }
+  //   }
+  //
+  //   if (person && person.assistantId && !answer) {
+  //     opening();
+  //   }
+  // }, [personId]);
 
   useEffect(() => {
     const generateAnswer = async (question) => {
