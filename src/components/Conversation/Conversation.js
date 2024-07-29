@@ -48,11 +48,10 @@ const Conversation = () => {
   };
 
   const initializeQuestions = async () => {
-    if (person && person.assistantId){
+    if (person && person.assistantId) {
       try {
         const response = await askQuestion("Generate 2 possible questions people might want to ask you based on current context. \n" +
             "Return the questions in a JavaScript array format without any special characters on the left and right ends, like this: [\"Question 1\", \"Question 2\"]. \n Always return new questions, no previous duplicate questions.", person.assistantId);
-        // const questions = response.data.reply.replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '').split('\n')
         const questions = response.data.reply.slice(1, -1).split(",");
         setQuestions([questions[0], questions[1]]);
       } catch (error) {
@@ -60,6 +59,25 @@ const Conversation = () => {
       }
     }
   }
+
+  useEffect(() => {
+    const opening = async () => {
+      if (person && person.assistantId && person.name) {
+        try {
+          const response = await askQuestion(`Generate an opening for this new conversation, greet user ${person.name} in your own way based on your instruction`, person.assistantId);
+          const greetings = response.data.reply;
+          setAnswer(greetings);
+        } catch (error) {
+          console.error('Error generating questions:', error);
+        }
+      }
+    }
+
+    if (person && person.assistantId && !answer) {
+      opening();
+      initializeQuestions();
+    }
+  }, [person]);
 
   useEffect(() => {
     const generateAnswer = async (question) => {
@@ -72,15 +90,13 @@ const Conversation = () => {
       } catch (error) {
         console.error('Error generating answer:', error);
       }
-    };
+    }
 
-    generateAnswer(selectedQuestion);
-    initializeQuestions();
+    if (selectedQuestion) {
+      generateAnswer(selectedQuestion);
+      initializeQuestions();
+    }
   }, [selectedQuestion])
-
-  useEffect(() => {
-    initializeQuestions();
-  }, [person]);
 
   return (
     <Container maxWidth="md">
