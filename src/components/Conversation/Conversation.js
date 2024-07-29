@@ -5,7 +5,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import EditIcon from '@mui/icons-material/Edit';
 import QuestionForm from './QuestionForm';
 import QuestionList from './QuestionList';
-import { generateText, generateSamplePrompts } from '../../utils';
+import {generateText, generateSamplePrompts, askQuestion} from '../../utils';
 import Answer from './Answer';
 import './Conversation.css';
 import { getPerson, getCollectionListByPerson } from '../../utils'; // Import the functions
@@ -13,11 +13,9 @@ import { getPerson, getCollectionListByPerson } from '../../utils'; // Import th
 const Conversation = () => {
   const { personId } = useParams();
   const [person, setPerson] = useState(null);
-  const [questions, setQuestions] = useState([
-    "How did you free yourself and others during the Civil War?",
-    "Where did you sail the commandeered ship to in 1862?"
-  ]);
-  const [selectedQuestion, setSelectedQuestion] = useState('');
+  // const [questions, setQuestions] = useState([`${person.name} is thinking...`, `${person.name} is thinking...`]);
+  const [questions, setQuestions] = useState([]);
+  const [selectedQuestion, setSelectedQuestion] = useState("");
   const [answer, setAnswer] = useState('');
   const [collections, setCollections] = useState([]); // State for collections
 
@@ -47,17 +45,42 @@ const Conversation = () => {
 
   const handleAskQuestion = (question) => {
     setSelectedQuestion(question);
-    generateAnswer(question);
   };
 
-  const generateAnswer = async (question) => {
-    try {
-      const response = await generateText(question, 'gpt-3.5-turbo');
-      setAnswer(response.data);
-    } catch (error) {
-      console.error('Error generating answer:', error);
+  const initializeQuestions = async () => {
+    if (person && person.assistantId){
+      try {
+        const response = await askQuestion("Generate 2 possible questions people might want to ask you based on current context. \n" +
+            "Return the questions in a JavaScript array format without any special characters on the left and right ends, like this: [\"Question 1\", \"Question 2\"]. \n Always return new questions, no previous duplicate questions.", person.assistantId);
+        // const questions = response.data.reply.replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '').split('\n')
+        const questions = response.data.reply.slice(1, -1).split(",");
+        setQuestions([questions[0], questions[1]]);
+      } catch (error) {
+        console.error('Error generating questions:', error);
+      }
     }
-  };
+  }
+
+  useEffect(() => {
+    const generateAnswer = async (question) => {
+      if (!question || !person.assistantId) {
+        return;
+      }
+      try {
+        const response = await askQuestion(question, person.assistantId);
+        setAnswer(response.data.reply);
+      } catch (error) {
+        console.error('Error generating answer:', error);
+      }
+    };
+
+    generateAnswer(selectedQuestion);
+    initializeQuestions();
+  }, [selectedQuestion])
+
+  useEffect(() => {
+    initializeQuestions();
+  }, [person]);
 
   return (
     <Container maxWidth="md">
@@ -89,9 +112,15 @@ const Conversation = () => {
               <EditIcon />
             </IconButton>
           </Box>
-          <QuestionList questions={questions} onSelectQuestion={handleAskQuestion} />
+          {
+            questions
+                ? <QuestionList questions={questions} onSelectQuestion={handleAskQuestion} />
+                : person && person.name
+                    ? <QuestionList questions={[`${person.name} is thinking...`, `${person.name} is thinking...`]}/>
+                    : <QuestionList questions={["Loading...", "Loading..."]}/>
+          }
           <QuestionForm onAskQuestion={handleAskQuestion} />
-          {selectedQuestion && <Answer answer={answer} />}
+          {<Answer answer={answer} />}
           <Box sx={{ mt: 4 }}>
             <Typography variant="h6" gutterBottom>
               In Collections:

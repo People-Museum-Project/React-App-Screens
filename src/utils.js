@@ -402,15 +402,16 @@ const generateText = async (prompt, model) => {
   }
 };
 
-const askQuestion = async (question) => {
+const askQuestion = async (question, assistantId) => {
   try {
     const response = await fetch(`${aiBaseurl}askQuestion`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ question })
+      body: JSON.stringify({ "question": question, "assistantId": assistantId})
     });
+
     const data = await response.json();
     console.log('Status:', response.status);
     console.log('Data:', data);
