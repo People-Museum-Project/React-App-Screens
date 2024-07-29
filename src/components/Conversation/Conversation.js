@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Container, Box, Typography, IconButton, List, ListItem, ListItemText } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import EditIcon from '@mui/icons-material/Edit';
 import QuestionForm from './QuestionForm';
 import QuestionList from './QuestionList';
-import {generateText, generateSamplePrompts, askQuestion} from '../../utils';
+import { generateText, generateSamplePrompts, askQuestion } from '../../utils';
 import Answer from './Answer';
 import './Conversation.css';
 import { getPerson, getCollectionListByPerson } from '../../utils'; // Import the functions
 
 const Conversation = () => {
   const { personId } = useParams();
+  const navigate = useNavigate(); // Define the navigate function
   const [person, setPerson] = useState(null);
-  // const [questions, setQuestions] = useState([`${person.name} is thinking...`, `${person.name} is thinking...`]);
   const [questions, setQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState("");
   const [answer, setAnswer] = useState('');
@@ -50,39 +50,24 @@ const Conversation = () => {
   const initializeQuestions = async () => {
     if (person && person.assistantId) {
       try {
-        const response = await askQuestion("Generate 2 possible questions people might want to ask you based on current context. \n" +
-            "Return the questions in a JavaScript array format without any special characters on the left and right ends, like this: [\"Question 1\", \"Question 2\"]. \n Always return new questions, no previous duplicate questions.", person.assistantId);
+        const response = await askQuestion(
+          "Generate 2 possible questions people might want to ask you based on current context. \n" +
+          "Return the questions in a JavaScript array format without any special characters on the left and right ends, like this: [\"Question 1\", \"Question 2\"]. \n Always return new questions, no previous duplicate questions.",
+          person.assistantId
+        );
         const questions = response.data.reply.slice(1, -1).split(",");
         setQuestions([questions[0], questions[1]]);
       } catch (error) {
         console.error('Error generating questions:', error);
       }
     }
-  }
+  };
 
   useEffect(() => {
     if (person && person.assistantId && questions.length === 0) {
       initializeQuestions();
     }
   }, [person, questions]);
-
-  // useEffect(() => {
-  //   const opening = async () => {
-  //     if (person && person.assistantId && person.name) {
-  //       try {
-  //         const response = await askQuestion(`Generate an opening for this new conversation, greet user by calling his name "${person.name}" in your own way based on your instruction`, person.assistantId);
-  //         const greetings = response.data.reply;
-  //         setAnswer(greetings);
-  //       } catch (error) {
-  //         console.error('Error generating questions:', error);
-  //       }
-  //     }
-  //   }
-  //
-  //   if (person && person.assistantId && !answer) {
-  //     opening();
-  //   }
-  // }, [personId]);
 
   useEffect(() => {
     const generateAnswer = async (question) => {
@@ -95,13 +80,13 @@ const Conversation = () => {
       } catch (error) {
         console.error('Error generating answer:', error);
       }
-    }
+    };
 
     if (selectedQuestion) {
       generateAnswer(selectedQuestion);
       initializeQuestions();
     }
-  }, [selectedQuestion])
+  }, [selectedQuestion]);
 
   return (
     <Container maxWidth="md">
@@ -110,13 +95,29 @@ const Conversation = () => {
           <Box component="header" sx={{ textAlign: 'center', mb: 3, position: 'relative' }}>
             <IconButton
               component={Link}
-              to="/"
+              onClick={() => navigate(-1)} // Use navigate to go back
               color="primary"
               sx={{ position: 'absolute', top: 16, left: 16 }}
             >
               <HomeIcon />
             </IconButton>
             <img src={person.imageLink} alt={person.name} style={{ maxWidth: 300, height: 'auto', borderRadius: 8 }} />
+            <Box sx={{ mt: 4, display: 'flex', alignItems: 'center' }}>
+              <Typography variant="h6" gutterBottom>
+                In Collections:
+              </Typography>c
+              {collections.length > 0 ? (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', ml: 1 }}>
+                  {collections.map((collection) => (
+                    <Typography key={collection.id} sx={{ mr: 2 }}>
+                      {collection.name}
+                    </Typography>
+                  ))}
+                </Box>
+              ) : (
+                <Typography sx={{ ml: 1 }}>Not in any</Typography>
+              )}
+            </Box>
             <Typography variant="h4" component="h2" sx={{ mt: 4, mb: 2 }}>
               Ask {person.name} a Question
             </Typography>
@@ -133,29 +134,9 @@ const Conversation = () => {
               <EditIcon />
             </IconButton>
           </Box>
-          {
-            questions
-                ? <QuestionList questions={questions} onSelectQuestion={handleAskQuestion} />
-                : person && person.name
-                    ? <QuestionList questions={[`${person.name} is thinking...`, `${person.name} is thinking...`]}/>
-                    : <QuestionList questions={["Loading...", "Loading..."]}/>
-          }
+          <QuestionList questions={questions} onSelectQuestion={handleAskQuestion} />
           <QuestionForm onAskQuestion={handleAskQuestion} />
-          {<Answer answer={answer} />}
-          <Box sx={{ mt: 4 }}>
-            <Typography variant="h6" gutterBottom>
-              In Collections:
-            </Typography>
-            <List>
-              {collections.map((collection) => (
-                <ListItem key={collection.id}>
-                  <ListItemText
-                    primary={collection.name}
-                  />
-                </ListItem>
-              ))}
-            </List>
-          </Box>
+          <Answer answer={answer} />
         </>
       ) : (
         <Typography variant="h6" sx={{ textAlign: 'center', mt: 4 }}>
