@@ -108,7 +108,7 @@ const Conversation = () => {
                   ))}
                 </Box>
               ) : (
-                <Typography sx={{ ml: 1 }}>Not in any</Typography>
+                  <Typography variant="h7" gutterBottom sx={{ ml: 1 }}>Not in any</Typography>
               )}
             </Box>
             <Typography variant="h4" component="h2" sx={{ mt: 4, mb: 2 }}>
