@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Container, Box, Typography, IconButton, CircularProgress } from '@mui/material';
+import { Container, Box, Typography, IconButton } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import EditIcon from '@mui/icons-material/Edit';
 import QuestionForm from './QuestionForm';
 import QuestionList from './QuestionList';
-import { generateText, generateSamplePrompts, askQuestion } from '../../utils';
+import { askQuestion } from '../../utils';
 import Answer from './Answer';
 import './Conversation.css';
 import { getPerson, getCollectionListByPerson } from '../../utils';
@@ -18,7 +18,8 @@ const Conversation = () => {
   const [selectedQuestion, setSelectedQuestion] = useState("");
   const [answer, setAnswer] = useState('');
   const [collections, setCollections] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [quesLoading, setQuesLoading] = useState(false);
+  const [ansLoading, setAnsLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,7 +51,7 @@ const Conversation = () => {
 
   const initializeQuestions = async () => {
     if (person && person.assistantId) {
-      setLoading(true);
+      setQuesLoading(true);
       try {
         const response = await askQuestion(
           "Generate 2 possible questions people might want to ask you based on current context. \n" +
@@ -62,7 +63,7 @@ const Conversation = () => {
       } catch (error) {
         console.error('Error generating questions:', error);
       } finally {
-        setLoading(false);
+        setQuesLoading(false);
       }
     }
   };
@@ -78,14 +79,14 @@ const Conversation = () => {
       if (!question || !person.assistantId) {
         return;
       }
-      setLoading(true);
+      setAnsLoading(true);
       try {
         const response = await askQuestion(question, person.assistantId);
         setAnswer(response.data.reply);
       } catch (error) {
         console.error('Error generating answer:', error);
       } finally {
-        setLoading(false);
+        setAnsLoading(false);
       }
     };
 
@@ -141,17 +142,13 @@ const Conversation = () => {
               <EditIcon />
             </IconButton>
           </Box>
-          {loading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-              <CircularProgress />
-            </Box>
-          ) : (
-            <>
-              <QuestionList questions={questions} onSelectQuestion={handleAskQuestion} />
-              <QuestionForm onAskQuestion={handleAskQuestion} />
-              {selectedQuestion && <Answer answer={answer} />}
-            </>
-          )}
+
+          <QuestionList questions={questions} onSelectQuestion={handleAskQuestion} quesLoading={quesLoading} person={person}/>
+          <QuestionForm onAskQuestion={handleAskQuestion} />
+          <>
+            {selectedQuestion && <Answer answer={answer} ansLoading={ansLoading} person={person}/>}
+          </>
+
         </>
       ) : (
         <Typography variant="h6" sx={{ textAlign: 'center', mt: 4 }}>

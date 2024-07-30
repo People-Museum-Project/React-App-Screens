@@ -79,3 +79,14 @@ body {
   line-height: 1.5;
   color: #ffffff;
 }
+
+.circular-progress-container {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff; /* Ensure text color matches the design */
+}
