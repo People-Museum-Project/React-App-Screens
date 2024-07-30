@@ -9,8 +9,8 @@ import { askQuestion } from '../../utils';
 import Answer from './Answer';
 import './Conversation.css';
 import { getPerson, getCollectionListByPerson } from '../../utils';
-import AudioPlayer from "./AudioPlayer";
 import { auth } from '../Login/firebase';
+import AudioPlayer from "./AudioPlayer";
 
 const Conversation = () => {
   const { personId } = useParams();
@@ -22,6 +22,7 @@ const Conversation = () => {
   const [collections, setCollections] = useState([]);
   const [quesLoading, setQuesLoading] = useState(false);
   const [ansLoading, setAnsLoading] = useState(false);
+  const [audioLoading, setAudioLoading] = useState(false);
   const [greetingsGenerated, setGreetingsGenerated] = useState(false);
 
 
@@ -143,22 +144,8 @@ const Conversation = () => {
               <HomeIcon />
             </IconButton>
             <img src={person.imageLink} alt={person.name} style={{ maxWidth: 300, height: 'auto', borderRadius: 8 }} />
-            <Box sx={{ mt: 4, display: 'flex', alignItems: 'center' }}>
-              <Typography variant="h6" gutterBottom>
-                In Collections:
-              </Typography>
-              {collections.length > 0 ? (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', ml: 1 }}>
-                  {collections.map((collection) => (
-                    <Typography key={collection.id} sx={{ mr: 2 }}>
-                      {collection.name}
-                    </Typography>
-                  ))}
-                </Box>
-              ) : (
-                <Typography variant="h7" gutterBottom sx={{ ml: 1 }}>Not in any</Typography>
-              )}
-            </Box>
+            <AudioPlayer text={answer} audioLoading={audioLoading} person={person}/>
+
             <Typography variant="h4" component="h2" sx={{ mt: 4, mb: 2 }}>
               Ask {person.name} a Question
             </Typography>
@@ -175,7 +162,6 @@ const Conversation = () => {
               <EditIcon />
             </IconButton>
           </Box>
-          <AudioPlayer text={answer}/>
 
           <QuestionList questions={questions} onSelectQuestion={handleAskQuestion} quesLoading={quesLoading} person={person}/>
           <QuestionForm onAskQuestion={handleAskQuestion} />
@@ -189,6 +175,22 @@ const Conversation = () => {
           Loading...
         </Typography>
       )}
+      <Box sx={{ mt: 4, display: 'flex', alignItems: 'center' }}>
+        {collections.length > 0 ? (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', ml: 1 }}>
+              <Typography variant="h6" gutterBottom>
+                In Collections:
+              </Typography>
+              {collections.map((collection) => (
+                  <Typography key={collection.id} sx={{ mr: 2 }}>
+                    {collection.name}
+                  </Typography>
+              ))}
+            </Box>
+        ) : (
+            <></>
+        )}
+      </Box>
     </Container>
   );
 };
