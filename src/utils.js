@@ -463,6 +463,26 @@ const generateFollowups = async (context) => {
   }
 };
 
+const generateSpeech = async (text) => {
+  try {
+    const response = await fetch(`${aiBaseurl}textToSpeech`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ text })
+    })
+    const arrayBuffer = await response.arrayBuffer();
+    const blob = new Blob([arrayBuffer], { type: 'audio/mpeg' });
+    const audioUrl = URL.createObjectURL(blob);
+    console.log('Status:', response.status);
+    console.log(audioUrl);
+    return audioUrl;
+  } catch (error) {
+    console.log('Error:', error.message)
+  }
+}
+
 module.exports = {
   addUser,
   getUser,
@@ -484,5 +504,6 @@ module.exports = {
   generateText,
   askQuestion,
   generateSamplePrompts,
-  generateFollowups
+  generateFollowups,
+  generateSpeech
 };

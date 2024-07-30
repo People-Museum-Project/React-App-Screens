@@ -8,7 +8,7 @@ const {
   addPersonCollection, 
   getCollection,
   addCollection,
-  deletePersonFromCollection, askQuestion
+  deletePersonFromCollection, askQuestion, generateText, generateSpeech
 } = require('./utils');
 
 const formData = {
@@ -40,7 +40,8 @@ async function test() {
     // await getCollection(5739062455435264);
     // await addCollection(formData);
     // await deletePersonFromCollection("5708300221939712","5751095477403648");
-    await askQuestion("how are you", 'asst_Q4umNWgd5rK79mcgOO4Og6Xt')
+    // await askQuestion("how are you", 'asst_Q4umNWgd5rK79mcgOO4Og6Xt')
+    await generateSpeech("Yo, what's up Alusi!")
 
   } catch (error) {
     console.error('Test function error:', error);
