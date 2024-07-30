@@ -145,7 +145,22 @@ const Conversation = () => {
             </IconButton>
             <img src={person.imageLink} alt={person.name} style={{ maxWidth: 300, height: 'auto', borderRadius: 8 }} />
             <AudioPlayer text={answer} audioLoading={audioLoading} person={person}/>
-
+            <Box sx={{ mt: 4, display: 'flex', alignItems: 'center' }}>
+              <Typography variant="h6" gutterBottom>
+                In Collections:
+              </Typography>
+              {collections.length > 0 ? (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', ml: 1 }}>
+                  {collections.map((collection) => (
+                    <Typography key={collection.id} variant="h7" gutterBottom sx={{ mr: 2 }}>
+                      {collection.name}
+                    </Typography>
+                  ))}
+                </Box>
+              ) : (
+                <Typography variant="h7" gutterBottom sx={{ ml: 1 }}>Not in any</Typography>
+              )}
+            </Box>
             <Typography variant="h4" component="h2" sx={{ mt: 4, mb: 2 }}>
               Ask {person.name} a Question
             </Typography>
@@ -175,22 +190,6 @@ const Conversation = () => {
           Loading...
         </Typography>
       )}
-      <Box sx={{ mt: 4, display: 'flex', alignItems: 'center' }}>
-        {collections.length > 0 ? (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', ml: 1 }}>
-              <Typography variant="h6" gutterBottom>
-                In Collections:
-              </Typography>
-              {collections.map((collection) => (
-                  <Typography key={collection.id} sx={{ mr: 2 }}>
-                    {collection.name}
-                  </Typography>
-              ))}
-            </Box>
-        ) : (
-            <></>
-        )}
-      </Box>
     </Container>
   );
 };
