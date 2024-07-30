@@ -140,7 +140,7 @@ const ExplorePage = () => {
           {collections.slice(0, visibleImages).map(collection => (
             <div key={collection.id} className="collection-container">
               <Link to={`/collection/${collection.id}`}>
-                <img src={collection.imageLink} alt={collection.name} className="photo" />
+                <img src={collection.imageLink} alt={collection.name} />
               </Link>
               <p className="photo-name">{collection.name}</p>
             </div>
