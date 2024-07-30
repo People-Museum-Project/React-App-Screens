@@ -122,3 +122,22 @@
   max-width: 100%;
   height: auto;
 }
+
+.collection-wall {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+  padding-left: 0px; /* Adjust this value to set distance from the left */
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.collection-wall .collection-container {
+  width: calc(100% / 6 - 10px); /* This ensures 6 items per row with space between */
+  max-width: none; /* Remove the previous max-width restriction */
+  margin: 5px 0; /* Add vertical margin between rows */
+  text-align: center;
+}
+

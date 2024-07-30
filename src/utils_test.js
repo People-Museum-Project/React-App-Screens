@@ -8,14 +8,14 @@ const {
   addPersonCollection, 
   getCollection,
   addCollection,
-  deletePersonFromCollection, askQuestion, generateText, generateSpeech
+  deletePersonFromCollection, askQuestion
 } = require('./utils');
 
 const formData = {
-  userId: '7s6fzzlWcifsb7iS7Q8TdTOHoW72', // Example user ID
-  collectionName: 'sss',
-  description: 'sss',
-  imageLink: 'sss',
+  userId: 'EXPLORE', // Example user ID
+  collectionName: 'Singer',
+  description: 'A singer is an artist of emotion, painting the canvas of silence with the colors of their soul.',
+  imageLink: 'https://www.careersinmusic.com/wp-content/uploads/2014/11/background-singer.jpg',
   isPublic: true,
 };
 
@@ -36,12 +36,11 @@ async function test() {
 
     // await getCollectionList('1', 2);
 
-    // await addPersonCollection(5632139873746944, 5675594515742720);
+    await addPersonCollection(5183941422088192, 5749761688731648);
     // await getCollection(5739062455435264);
     // await addCollection(formData);
     // await deletePersonFromCollection("5708300221939712","5751095477403648");
-    // await askQuestion("how are you", 'asst_Q4umNWgd5rK79mcgOO4Og6Xt')
-    await generateSpeech("Yo, what's up Alusi!")
+    // await askQuestion("wtf are you", 'asst_fLT3rXcpVtflqqN2KwWe1NJ2')
 
   } catch (error) {
     console.error('Test function error:', error);

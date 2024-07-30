@@ -138,15 +138,16 @@ const HomePage = () => {
           </Link>
         </div>
 
-        <Paper elevation={3} style={{ margin: '20px auto', padding: '20px', maxWidth: '600px' }}>
-          <List>
-            {collections && collections.map((collection) => (
-              <ListItem key={collection.id} button component={Link} to={`/collection/${collection.id}`}>
-                <ListItemText primary={collection.name} />
-              </ListItem>
-            ))}
-          </List>
-        </Paper>
+        <div className="collection-wall">
+          {collections.slice(0, visibleImages).map(collection => (
+            <div key={collection.id} className="collection-container">
+              <Link to={`/collection/${collection.id}`}>
+                <img src={collection.imageLink} alt={collection.name} className="photo" />
+              </Link>
+              <p className="photo-name">{collection.name}</p>
+            </div>
+          ))}
+        </div>
       </div>
       <Footer /> {/* Add Footer component */}
     </div>
