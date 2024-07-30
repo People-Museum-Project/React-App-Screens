@@ -20,6 +20,8 @@ const Conversation = () => {
   const [collections, setCollections] = useState([]);
   const [quesLoading, setQuesLoading] = useState(false);
   const [ansLoading, setAnsLoading] = useState(false);
+  const [greetingsGenerated, setGreetingsGenerated] = useState(false);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,6 +69,29 @@ const Conversation = () => {
       }
     }
   };
+
+  useEffect(() => {
+    const opening = async () => {
+      if (person && person.assistantId && person.name) {
+        try {
+          const response = await askQuestion(
+              `Generate an opening for this new conversation, greet user by calling his name "${person.name}" in your own way based on your instruction`,
+              person.assistantId
+          );
+          const greetings = response.data.reply;
+          setAnswer(greetings);
+          setGreetingsGenerated(true);
+        } catch (error) {
+          console.error('Error generating greetings:', error);
+        }
+      }
+    };
+
+    if (person && person.assistantId && person.name && !greetingsGenerated) {
+      opening();
+    }
+  }, [person, greetingsGenerated]);
+
 
   useEffect(() => {
     if (person && person.assistantId && questions.length === 0) {
@@ -146,7 +171,7 @@ const Conversation = () => {
           <QuestionList questions={questions} onSelectQuestion={handleAskQuestion} quesLoading={quesLoading} person={person}/>
           <QuestionForm onAskQuestion={handleAskQuestion} />
           <>
-            {selectedQuestion && <Answer answer={answer} ansLoading={ansLoading} person={person}/>}
+            {<Answer answer={answer} ansLoading={ansLoading} person={person}/>}
           </>
 
         </>
