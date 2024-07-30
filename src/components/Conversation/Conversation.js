@@ -9,6 +9,8 @@ import { askQuestion } from '../../utils';
 import Answer from './Answer';
 import './Conversation.css';
 import { getPerson, getCollectionListByPerson } from '../../utils';
+import AudioPlayer from "./AudioPlayer";
+import { auth } from '../Login/firebase';
 
 const Conversation = () => {
   const { personId } = useParams();
@@ -72,12 +74,15 @@ const Conversation = () => {
 
   useEffect(() => {
     const opening = async () => {
-      if (person && person.assistantId && person.name) {
+      if (person && person.assistantId) {
         try {
-          const response = await askQuestion(
-              `Generate an opening for this new conversation, greet user by calling his name "${person.name}" in your own way based on your instruction`,
-              person.assistantId
-          );
+          let greetingPrompt;
+          if (auth.currentUser && auth.currentUser.displayName) {
+            greetingPrompt = `Generate an opening for this new conversation, greet user by calling his name "${auth.currentUser.displayName}" in your own way based on your instruction`;
+          } else {
+            greetingPrompt = `Generate an opening for this new conversation, greet user by calling him "my dear friend" in your own way based on your instruction`;
+          }
+          const response = await askQuestion(greetingPrompt, person.assistantId);
           const greetings = response.data.reply;
           setAnswer(greetings);
           setGreetingsGenerated(true);
@@ -120,6 +125,9 @@ const Conversation = () => {
       initializeQuestions();
     }
   }, [selectedQuestion]);
+
+
+
 
   return (
     <Container maxWidth="md">
@@ -167,6 +175,7 @@ const Conversation = () => {
               <EditIcon />
             </IconButton>
           </Box>
+          <AudioPlayer text={answer}/>
 
           <QuestionList questions={questions} onSelectQuestion={handleAskQuestion} quesLoading={quesLoading} person={person}/>
           <QuestionForm onAskQuestion={handleAskQuestion} />
