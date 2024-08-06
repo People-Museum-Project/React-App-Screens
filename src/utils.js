@@ -483,6 +483,20 @@ const generateSpeech = async (text) => {
   }
 }
 
+const speechRecognition = async (audioData) => {
+  try {
+    const response = await fetch(`${aiBaseurl}speechRecognition`, {
+      method: 'POST',
+      body: audioData
+    })
+    const data = response.json();
+    console.log('Status:', response.status);
+    return data;
+  } catch (error) {
+    console.log('Error:', error.message)
+  }
+}
+
 module.exports = {
   addUser,
   getUser,
@@ -505,5 +519,6 @@ module.exports = {
   askQuestion,
   generateSamplePrompts,
   generateFollowups,
-  generateSpeech
+  generateSpeech,
+  speechRecognition
 };

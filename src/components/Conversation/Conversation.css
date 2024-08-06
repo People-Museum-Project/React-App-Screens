@@ -34,6 +34,7 @@ body {
   margin-bottom: 20px;
 }
 
+.audio-button,
 .question-button,
 .ask-button {
   background-color: #007bff;
@@ -45,6 +46,7 @@ body {
   font-size: 18px;
 }
 
+.audio-button:hover,
 .question-button:hover,
 .ask-button:hover {
   background-color: #0056b3;
@@ -89,4 +91,10 @@ body {
   align-items: center;
   justify-content: center;
   color: #ffffff; /* Ensure text color matches the design */
+}
+
+.container {
+  display: flex;
+  align-items: center; /* Center items vertically */
+  gap: 10px; /* Space between components */
 }

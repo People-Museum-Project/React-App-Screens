@@ -11,6 +11,7 @@ import './Conversation.css';
 import { getPerson, getCollectionListByPerson } from '../../utils';
 import { auth } from '../Login/firebase';
 import AudioPlayer from "./AudioPlayer";
+import AudioRecorder from "./AudioRecorder";
 
 const Conversation = () => {
   const { personId } = useParams();
@@ -145,6 +146,7 @@ const Conversation = () => {
             </IconButton>
             <img src={person.imageLink} alt={person.name} style={{ maxWidth: 300, height: 'auto', borderRadius: 8 }} />
             <AudioPlayer text={answer} audioLoading={audioLoading} person={person}/>
+
             <Box sx={{ mt: 4, display: 'flex', alignItems: 'center' }}>
               <Typography variant="h6" gutterBottom>
                 In Collections:
@@ -179,7 +181,10 @@ const Conversation = () => {
           </Box>
 
           <QuestionList questions={questions} onSelectQuestion={handleAskQuestion} quesLoading={quesLoading} person={person}/>
-          <QuestionForm onAskQuestion={handleAskQuestion} />
+          <div className="container">
+            <QuestionForm onAskQuestion={handleAskQuestion} />
+            <AudioRecorder onSetSelectedQuestion={setSelectedQuestion}/>
+          </div>
           <>
             {<Answer answer={answer} ansLoading={ansLoading} person={person}/>}
           </>

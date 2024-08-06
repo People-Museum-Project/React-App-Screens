@@ -1,0 +1,19 @@
+.voice-input-button {
+    background: url('./voiceInput.png') no-repeat center center; /* Set the background image */
+    background-size: cover; /* Cover the button area with the image */
+    border: none; /* Remove border */
+    width: 60px; /* Set the width of the button */
+    height: 60px; /* Set the height of the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition (optional) */
+}
+
+.voice-input-button:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Optional: add slight background color on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: add shadow on hover */
+}
+
+.voice-input-button:active {
+    background-color: rgba(0, 0, 0, 0.2); /* Optional: darker background on click */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Optional: reduce shadow on click */
+}
