@@ -183,7 +183,6 @@ const Conversation = () => {
           <QuestionList questions={questions} onSelectQuestion={handleAskQuestion} quesLoading={quesLoading} person={person}/>
           <div className="container">
             <QuestionForm onAskQuestion={handleAskQuestion} />
-            <AudioRecorder onSetSelectedQuestion={setSelectedQuestion}/>
           </div>
           <>
             {<Answer answer={answer} ansLoading={ansLoading} person={person}/>}

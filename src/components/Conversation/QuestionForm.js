@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import './Conversation.css';
+import AudioRecorder from './AudioRecorder';
 
-function QuestionForm({ onAskQuestion }) {
+function QuestionForm({ onAskQuestion, onSetSelectedQuestion}) {
     const [question, setQuestion] = useState('');
 
     const handleChange = (e) => {
@@ -24,6 +25,7 @@ function QuestionForm({ onAskQuestion }) {
                 className="question-input"
             />
             <button type="submit" className="ask-button">Ask</button>
+            <AudioRecorder onSetSelectedQuestion={onSetSelectedQuestion} />
         </form>
     );
 }
