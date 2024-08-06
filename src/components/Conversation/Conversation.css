@@ -34,7 +34,6 @@ body {
   margin-bottom: 20px;
 }
 
-.audio-button,
 .question-button,
 .ask-button {
   background-color: #007bff;
@@ -42,6 +41,16 @@ body {
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.audio-button {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  padding: 10px 12px 10px;
+  border-radius: 80px;
   cursor: pointer;
   font-size: 18px;
 }
@@ -55,8 +64,10 @@ body {
 .question-form {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 10px;
   margin-bottom: 20px;
+  width: 80%;
 }
 
 .question-input {
@@ -65,7 +76,7 @@ body {
   border: 1px solid #ffffff;
   /* White border */
   font-size: 16px;
-  width: 70%;
+  width: 80%;
 }
 
 .answer-container {
@@ -95,6 +106,13 @@ body {
 
 .container {
   display: flex;
+  justify-content: center;
   align-items: center; /* Center items vertically */
   gap: 10px; /* Space between components */
+  flex-direction: column;
+}
+
+.audio-button img {
+  width: 24px;
+  height: 24px;
 }
