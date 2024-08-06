@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { speechRecognition } from "../../utils";
+import recordIcon from './voiceInput.png';
+import stopIcon from './voiceStop.png';
 
 const AudioRecorder = ({ onSetSelectedQuestion }) => {
     const [isRecording, setIsRecording] = useState(false);
@@ -75,13 +77,9 @@ const AudioRecorder = ({ onSetSelectedQuestion }) => {
     }
 
     return (
-        <div>
-            {
-                isRecording
-                    ? <button className="audio-button" onClick={toggleRecording}>Stop</button>
-                    : <button className="audio-button" onClick={toggleRecording}>Record</button>
-            }
-        </div>
+        <button type="button" className="audio-button" onClick={toggleRecording}>
+            <img src={isRecording ? stopIcon : recordIcon} alt={isRecording ? "Stop" : "Record"} />
+        </button>
     );
 };
 

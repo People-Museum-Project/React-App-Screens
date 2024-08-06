@@ -182,7 +182,7 @@ const Conversation = () => {
 
           <QuestionList questions={questions} onSelectQuestion={handleAskQuestion} quesLoading={quesLoading} person={person}/>
           <div className="container">
-            <QuestionForm onAskQuestion={handleAskQuestion} />
+            <QuestionForm onAskQuestion={handleAskQuestion} onSetSelectedQuestion={setSelectedQuestion} />
           </div>
           <>
             {<Answer answer={answer} ansLoading={ansLoading} person={person}/>}
