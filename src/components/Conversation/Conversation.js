@@ -155,7 +155,9 @@ const Conversation = () => {
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', ml: 1 }}>
                   {collections.map((collection) => (
                     <Typography key={collection.id} variant="h7" gutterBottom sx={{ mr: 2 }}>
-                      {collection.name}
+                        <Link to={`/collection/${collection.id}`}>
+                          <img src={collection.imageLink} alt={collection.name} className="collection-image" />
+                        </Link>
                     </Typography>
                   ))}
                 </Box>
