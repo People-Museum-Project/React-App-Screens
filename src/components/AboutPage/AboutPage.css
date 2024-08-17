@@ -1,0 +1,28 @@
+.about-content {
+margin: 40px auto;
+padding: 20px;
+max-width: 800px;
+border-radius: 8px;
+}
+
+.about-content h4 {
+font-weight: bold;
+color: #ffffff; /* Primary theme color */
+}
+
+.about-content p {
+font-size: 1rem;
+line-height: 1.6;
+color: #ffffff;
+}
+
+@media (max-width: 600px) {
+.about-content {
+    margin: 20px;
+    padding: 15px;
+}
+
+.about-content p {
+    font-size: 0.9rem;
+}
+}

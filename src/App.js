@@ -14,6 +14,7 @@ import AddPersonToCollection from './components/AddPersonToCollection/AddPersonT
 import UpdatePersonCollection from './components/AddPersonToCollection/UpdatePersonCollection';
 import CollectionPage from './components/CollectionPage/CollectionPage';
 import Conversation from './components/Conversation/Conversation';
+import AboutPage from './components/AboutPage/AboutPage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Profile from './components/Login/profile';
 import { auth } from './components/Login/firebase';
@@ -65,6 +66,7 @@ const App = () => {
             <Route path="/add-person-collection/:collectionId" element={<AddPersonToCollection />} />
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/about" element={<AboutPage />} />
           </Routes>
         </Router>
     </ThemeProvider>
