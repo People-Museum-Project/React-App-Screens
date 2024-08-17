@@ -33,9 +33,9 @@ const AboutPage = () => {
     },
     {
         name: "Junsheng Ye (YJ)",
-        email: "alusi.shar@gmail.com",
-        github: "https://github.com/Alas129",
-        linkedin: "https://www.linkedin.com/in/fnu-alusi"
+        email: "overdosedizzy@gmail.com",
+        github: "https://github.com/YJ-Junsheng-Ye",
+        linkedin: "https://www.linkedin.com/in/junsheng-ye-a02841289/"
     },
     {
         name: "Kayvan Zahiri",
