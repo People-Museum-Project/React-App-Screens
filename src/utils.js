@@ -1,6 +1,6 @@
 //src/utils.js
-const baseurl = 'http://127.0.0.1:8080/db/';
-const aiBaseurl = 'http://127.0.0.1:8080/ai/';
+const baseurl = 'https://people-museum-backend-76ifyoxcwa-ww.a.run.app/db/';
+const aiBaseurl = 'https://people-museum-backend-76ifyoxcwa-ww.a.run.app/ai/';
 
 
 const addUser = async (name, imageLink, description, favourite, googleUserId, gmail) => {
