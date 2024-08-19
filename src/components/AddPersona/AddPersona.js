@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Box, Typography, Card, CardMedia } from '@mui/material';
+import { TextField, Button, Box, Typography, Card, CardMedia, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { addPerson } from '../../utils';
@@ -49,6 +49,7 @@ const PersonForm = ({ onSubmit, navigate }) => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
+    gender: '',
     description: '',
     pic: null,
     picURL: '',
@@ -87,6 +88,7 @@ const PersonForm = ({ onSubmit, navigate }) => {
       setFormData({
         firstName: '',
         lastName: '',
+        gender: '',
         description: '',
         pic: null,
         picURL: '',
@@ -134,6 +136,27 @@ const PersonForm = ({ onSubmit, navigate }) => {
         required
         InputLabelProps={{ style: { color: 'white' } }}
       />
+      <FormControl sx={{ marginBottom: 2, width: '300px' }}>
+        <InputLabel style={{ color: 'white' }}>Gender</InputLabel>
+        <Select
+          name="gender"
+          value={formData.gender}
+          onChange={handleChange}
+          label="Gender"
+          sx={{
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'white',
+            },
+            '& .MuiSvgIcon-root': {
+              color: 'white',
+            },
+            color: 'white',
+          }}
+        >
+          <MenuItem value={1}>Male</MenuItem>
+          <MenuItem value={0}>Female</MenuItem>
+        </Select>
+      </FormControl>
       <TextField
         sx={{ marginBottom: 2, width: '300px' }}
         label="Description"
@@ -215,6 +238,7 @@ const AddPersona = () => {
   const handlePersonSubmit = async (formData, resetForm) => {
     const formDataToSend = {
       name: `${formData.firstName} ${formData.lastName}`,
+      gender: formData.gender,
       imageLink: formData.picURL,
       description: formData.description,
       context: "Example context",
