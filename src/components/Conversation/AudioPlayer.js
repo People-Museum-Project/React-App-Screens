@@ -11,7 +11,10 @@ const AudioPlayer = ({ text, audioLoading, person }) => {
     useEffect(() => {
         const fetchAudio = async () => {
             try {
-                const url = await generateSpeech(text);
+                // Determine the voice based on gender
+                const voice = person.gender === 1 ? "onyx" : "nova";
+
+                const url = await generateSpeech(text, voice);
                 if (url !== audioUrl) { // Check if URL has changed before updating state
                     setAudioUrl(url);
                     setIsPlaying(true);

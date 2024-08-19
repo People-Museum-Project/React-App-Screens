@@ -463,14 +463,17 @@ const generateFollowups = async (context) => {
   }
 };
 
-const generateSpeech = async (text) => {
+const generateSpeech = async (text, voice) => {
   try {
     const response = await fetch(`${aiBaseurl}textToSpeech`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ text })
+      body: JSON.stringify({ 
+        "text": text,
+        "voice": voice
+      })
     })
     const arrayBuffer = await response.arrayBuffer();
     const blob = new Blob([arrayBuffer], { type: 'audio/mpeg' });
